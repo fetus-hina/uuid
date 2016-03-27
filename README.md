@@ -2,6 +2,7 @@ jp3cki/uuid
 ===========
 
 The simple UUID implementation.
+[![Build Status](https://travis-ci.org/fetus-hina/uuid.svg?branch=master)](https://travis-ci.org/fetus-hina/uuid)
 
 Requirements
 ------------
