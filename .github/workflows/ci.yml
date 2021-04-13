@@ -1,0 +1,95 @@
+name: 'CI'
+on: ['push', 'pull_request']
+jobs:
+  phpSyntaxCheck:
+    name: 'PHP Syntax Check (PHP ${{ matrix.envconf.php }} on ${{ matrix.envconf.os }})'
+
+    strategy:
+      matrix:
+        envconf:
+          - os: 'ubuntu-16.04'
+            php: '7.0'
+
+          - os: 'ubuntu-18.04'
+            php: '7.1'
+
+          - os: 'ubuntu-18.04'
+            php: '7.2'
+
+          - os: 'ubuntu-18.04'
+            php: '7.3'
+
+          - os: 'ubuntu-20.04'
+            php: '7.4'
+
+          - os: 'ubuntu-20.04'
+            php: '8.0'
+
+    runs-on: '${{ matrix.envconf.os }}'
+    steps:
+      - uses: 'actions/checkout@v2'
+
+      - name: 'Set up PHP version ${{ matrix.envconf.php }}'
+        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.envconf.php }}
+
+      - name: 'Syntax check'
+        run: |
+          php -v
+          find . \( -type d \( -name '.git' -or -name 'vendor' \) -prune \) -or \( -type f -name '*.php' -print \) | LANG=C sort | xargs -n 1 php -l
+
+  phpStyleCheck:
+    name: 'PHP Coding Style'
+
+    runs-on: 'ubuntu-20.04'
+
+    steps:
+      - uses: 'actions/checkout@v2'
+
+      - name: 'Set up PHP version 8.0'
+        run: sudo update-alternatives --set php /usr/bin/php8.0
+
+      - name: 'Install PHP dependencies'
+        run: 'composer install --prefer-dist'
+
+      - name: 'Run PHPCS'
+        run: './vendor/bin/phpcs'
+
+  phpTest:
+    name: 'PHP Test (PHP ${{ matrix.envconf.php }} on ${{ matrix.envconf.os }})'
+
+    strategy:
+      matrix:
+        envconf:
+          - os: 'ubuntu-16.04'
+            php: '7.0'
+
+          - os: 'ubuntu-18.04'
+            php: '7.1'
+
+          - os: 'ubuntu-18.04'
+            php: '7.2'
+
+          - os: 'ubuntu-18.04'
+            php: '7.3'
+
+          - os: 'ubuntu-20.04'
+            php: '7.4'
+
+          - os: 'ubuntu-20.04'
+            php: '8.0'
+
+    runs-on: '${{ matrix.envconf.os }}'
+
+    steps:
+      - uses: 'actions/checkout@v2'
+
+      - name: 'Set up PHP version ${{ matrix.envconf.php }}'
+        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.envconf.php }}
+
+      - name: 'Install PHP dependencies'
+        run: 'composer install --prefer-dist'
+
+      - name: 'Run test'
+        run: 'vendor/bin/phpunit'
+        env:
+          XDEBUG_MODE: 'coverage'
