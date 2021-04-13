@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\internal;
 
+use Exception;
 use jp3cki\uuid\Exception as MyException;
 
 class Random
