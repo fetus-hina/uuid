@@ -2,12 +2,11 @@ jp3cki/uuid
 ===========
 
 The simple UUID implementation.
-[![Build Status](https://travis-ci.org/fetus-hina/uuid.svg?branch=master)](https://travis-ci.org/fetus-hina/uuid)
 
 Requirements
 ------------
 
-* PHP >= 5.4 (Recommended: PHP >= 7.0)
+* PHP >= 7.0
 * Basic extensions
     - PCRE (preg)
     - Hash
@@ -26,6 +25,7 @@ Usage
 
 ```php
 <?php
+
 require_once(__DIR__ . '/vendor/autoload.php'); // composer autoloader
 
 use jp3cki\uuid\Uuid;
@@ -37,6 +37,7 @@ echo Uuid::v4() . "\n"; // outputs: 4c9d5550-f58e-4259-ba00-5e59b15895a0
 
 ```php
 <?php
+
 require_once(__DIR__ . '/vendor/autoload.php');
 
 use jp3cki\uuid\Uuid;

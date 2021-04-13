@@ -1,17 +1,21 @@
 <?php
+
 /**
- * @copyright Copyright (C) 2016 AIZAWA Hina
+ * @copyright Copyright (C) 2016-2021 AIZAWA Hina
  * @license https://github.com/fetus-hina/uuid/blob/master/LICENSE MIT
- * @author AIZAWA Hina <hina@bouhime.com>
+ * @author AIZAWA Hina <hina@fetus.jp>
  */
+
+declare(strict_types=1);
 
 namespace jp3cki\uuid\test;
 
-use jp3cki\uuid\Exception as Except;
+use PHPUnit\Framework\TestCase;
+use jp3cki\uuid\Exception;
 use jp3cki\uuid\NS;
 use jp3cki\uuid\Uuid;
 
-class UuidTest extends \PHPUnit_Framework_TestCase
+class UuidTest extends TestCase
 {
     public function testDefaultConstruct()
     {
@@ -85,38 +89,32 @@ class UuidTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException jp3cki\uuid\Exception
-     */
     public function testConstructFromBrokenString()
     {
+        $this->expectException(Exception::class);
         new Uuid('hoge');
     }
 
-    /**
-     * @expectedException jp3cki\uuid\Exception
-     */
     public function testConstructFromBrokenNilUuid()
     {
+        $this->expectException(Exception::class);
+
         // 00000000-0000-0000-0000-0000000000ff
         new Uuid(str_repeat(chr(0), 15) . chr(0xff));
     }
 
-    /**
-     * @expectedException jp3cki\uuid\Exception
-     */
     public function testConstructFromUnexpectedType()
     {
+        $this->expectException(Exception::class);
         new Uuid(42);
     }
 
-    /**
-     * @expectedException jp3cki\uuid\Exception
-     */
     public function testConstructFromInvalidVersion()
     {
+        $this->expectException(Exception::class);
+        //                      v
         new Uuid('74738ff5-5367-6958-9aee-98fffdcd1876');
-        //                     ^^^
+        //                      ^
     }
 
     public function testConstructFromOtherInstance()

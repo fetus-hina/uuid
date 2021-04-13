@@ -1,9 +1,12 @@
 <?php
+
 /**
- * @copyright Copyright (C) 2016 AIZAWA Hina
+ * @copyright Copyright (C) 2016-2021 AIZAWA Hina
  * @license https://github.com/fetus-hina/uuid/blob/master/LICENSE MIT
- * @author AIZAWA Hina <hina@bouhime.com>
+ * @author AIZAWA Hina <hina@fetus.jp>
  */
+
+declare(strict_types=1);
 
 namespace jp3cki\uuid\internal;
 
@@ -19,7 +22,7 @@ class Random
             'byUnixRandom',
             'byOpenSSLRandom',
         ];
-        
+
         foreach ($methods as $method) {
             try {
                 $r = call_user_func([__CLASS__, $method], $length);
@@ -30,7 +33,7 @@ class Random
             }
         }
 
-        throw new MyException('No random source. Please use PHP 7 or install paragonie/random_compat.');
+        throw new MyException('No random source');
     }
 
     public static function byPHP7Random($length)

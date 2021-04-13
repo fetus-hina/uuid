@@ -5,21 +5,18 @@
     "authors": [
         {
             "name": "AIZAWA Hina",
-            "email": "hina@bouhime.com"
+            "email": "hina@fetus.jp"
         }
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">= 5.4",
+        "php": ">= 7.0",
         "ext-pcre": "*",
         "ext-hash": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*|5.*",
-        "squizlabs/php_codesniffer": "^2.5"
-    },
-    "suggest": {
-        "paragonie/random_compat": "random_bytes() polyfill library for PHP 5.6 or earlier."
+        "phpunit/phpunit": "*",
+        "squizlabs/php_codesniffer": "*"
     },
     "autoload": {
         "psr-4": {
