@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\internal;
 
-use Exception;
-use jp3cki\uuid\Exception as MyException;
+use Throwable;
+use jp3cki\uuid\Exception;
 
 class Random
 {
@@ -30,11 +30,11 @@ class Random
                 if (is_string($r) && strlen($r) === $length) {
                     return $r;
                 }
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
             }
         }
 
-        throw new MyException('No random source');
+        throw new Exception('No random source');
     }
 
     public static function byPHP7Random($length)
