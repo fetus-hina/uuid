@@ -6,7 +6,7 @@ The simple UUID implementation.
 Requirements
 ------------
 
-* PHP >= 7.0
+* PHP ≥ 7.0
 * Basic extensions
     - PCRE (preg)
     - Hash
@@ -21,7 +21,7 @@ $ composer.phar require jp3cki/uuid
 Usage
 -----
 
-### Random-based UUID (version 4, aka GUID)###
+### Random-based UUID (version 4, aka GUID)
 
 ```php
 <?php
@@ -33,7 +33,7 @@ use jp3cki\uuid\Uuid;
 echo Uuid::v4() . "\n"; // outputs: 4c9d5550-f58e-4259-ba00-5e59b15895a0
 ```
 
-### Hash-based UUID (version 3 or 5) ###
+### Hash-based UUID (version 3 or 5)
 
 ```php
 <?php
