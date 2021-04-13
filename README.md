@@ -1,6 +1,9 @@
 jp3cki/uuid
 ===========
 
+[![Latest Stable Version](https://poser.pugx.org/jp3cki/uuid/v)](//packagist.org/packages/jp3cki/uuid)
+[![License](https://poser.pugx.org/jp3cki/uuid/license)](//packagist.org/packages/jp3cki/uuid)
+
 The simple UUID implementation.
 
 Requirements
