@@ -11,12 +11,14 @@ Requirements
     - PCRE (preg)
     - Hash
 
+
 Install
 -------
 
 ```
 $ composer.phar require jp3cki/uuid
 ```
+
 
 Usage
 -----
@@ -58,9 +60,17 @@ Predefined UUIDs (for "namespace"):
 * `jp3cki\uuid\NS::oid()` : `6ba7b812-9dad-11d1-80b4-00c04fd430c8`
 * `jp3cki\uuid\NS::x500()` : `6ba7b814-9dad-11d1-80b4-00c04fd430c8`
 
+
 License
 -------
 
 Under the MIT License.
 
 Please refer the [LICENSE](https://github.com/fetus-hina/uuid/blob/master/LICENSE) file.
+
+
+Breaking Changes
+----------------
+
+- v1.0.0
+  - Changed minimum requirement to PHP 7.0
