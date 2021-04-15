@@ -139,4 +139,18 @@ final class UuidTest extends TestCase
             (new Uuid(new Uuid(NS::DNS)))->__toString()
         );
     }
+
+    /** @return void */
+    public function testFromStringEmpty()
+    {
+        $this->expectException(Exception::class);
+        Uuid::fromString('');
+    }
+
+    /** @return void */
+    public function testFromStringInvalidBinary()
+    {
+        $this->expectException(Exception::class);
+        Uuid::fromString((string)hex2bin('74738ff5536769589aee98fffdcd1876'));
+    }
 }

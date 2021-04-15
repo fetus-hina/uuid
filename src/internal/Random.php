@@ -23,10 +23,10 @@ final class Random
                 return static::byPHP7Random($length);
             },
             function (int $length) {
-                return static::byUnixRandom($length);
+                return static::byUnixRandom($length); // @codeCoverageIgnore
             },
             function (int $length) {
-                return static::byOpenSSLRandom($length);
+                return static::byOpenSSLRandom($length); // @codeCoverageIgnore
             },
         ];
 
@@ -36,11 +36,11 @@ final class Random
                 if (is_string($r) && strlen($r) === $length) {
                     return $r;
                 }
-            } catch (Throwable $e) {
+            } catch (Throwable $e) { // @codeCoverageIgnore
             }
         }
 
-        throw new Exception('No random source');
+        throw new Exception('No random source'); // @codeCoverageIgnore
     }
 
     /** @return ?string */
@@ -50,7 +50,7 @@ final class Random
             return random_bytes($length);
         }
 
-        return null;
+        return null; // @codeCoverageIgnore
     }
 
     /** @return ?string */
@@ -63,7 +63,7 @@ final class Random
             }
         }
 
-        return null;
+        return null; // @codeCoverageIgnore
     }
 
     /** @return ?string */
@@ -77,6 +77,6 @@ final class Random
             }
         }
 
-        return null;
+        return null; // @codeCoverageIgnore
     }
 }
