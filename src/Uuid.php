@@ -10,63 +10,84 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
-class Uuid
+use jp3cki\uuid\internal\Random;
+
+final class Uuid
 {
+    /** @var string */
     protected $binary;
 
-    public static function v3($namespace, $value)
+    /**
+     * @param self|string $namespace
+     */
+    public static function v3($namespace, string $value): self
     {
         return static::hashedUuid('md5', 3, $namespace, $value);
     }
 
-    public static function v4()
+    public static function v4(): self
     {
-        $instance = new static();
-        $instance->binary = internal\Random::bytes(16); // 128 bits
+        $instance = new self();
+        $instance->binary = Random::bytes(16); // 128 bits
         $instance->fix(4);
         return $instance;
     }
 
-    public static function v5($namespace, $value)
+    /**
+     * @param self|string $namespace
+     */
+    public static function v5($namespace, string $value): self
     {
         return static::hashedUuid('sha1', 5, $namespace, $value);
     }
 
-    public static function fromString($value)
+    public static function fromString(string $value): self
     {
-        $instance = new static();
-        $value = trim((string)$value);
+        $instance = new self();
+        $value = trim($value);
         if ($value === '') {
-            goto done;
+            throw new Exception('Given string is not a valid UUID.');
         }
+
         if (strlen($value) === 16) {
             $instance->binary = $value;
-            goto done;
+            if (!$instance->isValid()) {
+                throw new Exception('Given string is not a valid UUID.');
+            }
+            return $instance;
         }
-        $value = preg_replace('/(?:urn|uuid):|[{}-]/', '', $value);
+
+        $value = (string)preg_replace('/(?:urn|uuid):|[{}-]/', '', $value);
         if (preg_match('/^[0-9A-Fa-f]{32}$/', $value)) {
-            $instance->binary = hex2bin($value);
-            goto done;
+            $tmp = hex2bin($value);
+            if ($tmp !== false) {
+                $instance->binary = $tmp;
+                if ($instance->isValid()) {
+                    return $instance;
+                }
+            }
+
+            throw new Exception('Given string is not a valid UUID.');
         }
 
         throw new Exception('Given string is not a UUID.');
-
-        done:
-        if (!$instance->isValid()) {
-            throw new Exception('Given string is not a valid UUID.');
-        }
-        return $instance;
     }
 
-    protected static function hashedUuid($hash, $version, $ns, $value)
+    /**
+     * @param self|string $ns
+     */
+    protected static function hashedUuid(string $hash, int $version, $ns, string $value): self
     {
-        $nsUuid = ($ns instanceof static) ? $ns : new static($ns);
-        $instance = new static();
+        $nsUuid = ($ns instanceof self) ? $ns : new self($ns);
+        $instance = new self();
         $instance->binary = substr(hash($hash, $nsUuid->binary . $value, true), 0, 16);
         $instance->fix($version);
         return $instance;
     }
 
+    /**
+     * @param self|string|null $uuid
+     */
     public function __construct($uuid = null)
     {
         if ($uuid instanceof self) {
@@ -80,12 +101,12 @@ class Uuid
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->formatAsString();
     }
 
-    public function formatAsString()
+    public function formatAsString(): string
     {
         $hex = strtolower(bin2hex($this->binary));
         return implode('-', [
@@ -97,17 +118,17 @@ class Uuid
         ]);
     }
 
-    public function formatAsUri()
+    public function formatAsUri(): string
     {
         return 'urn:uuid:' . $this->formatAsString();
     }
 
-    public function getVersion()
+    public function getVersion(): int
     {
         return (ord($this->binary[6]) & 0xf0) >> 4;
     }
 
-    public function isValid()
+    public function isValid(): bool
     {
         switch ($this->getVersion()) {
             case 0:
@@ -125,9 +146,12 @@ class Uuid
         }
     }
 
-    protected function fix($version)
+    /**
+     * @return void
+     */
+    protected function fix(int $version)
     {
-        $manip = function ($offset, $mask, $add) {
+        $manip = function (int $offset, int $mask, int $add) {
             $mask = $mask & 0xff;
             $add  = $add  & 0xff;
             $value = ord($this->binary[$offset]);

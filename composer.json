@@ -15,6 +15,7 @@
         "ext-hash": "*"
     },
     "require-dev": {
+        "phpstan/phpstan": "*",
         "phpunit/phpunit": "*",
         "squizlabs/php_codesniffer": "*"
     },

@@ -10,6 +10,6 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
-class Exception extends \Exception
+final class Exception extends \Exception
 {
 }

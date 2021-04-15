@@ -11,6 +11,7 @@ test: setup
 .PHONY: check-style
 check-style: setup
 	vendor/bin/phpcs --encoding=UTF-8 --runtime-set ignore_warnings_on_exit 1 src test
+	vendor/bin/phpstan
 
 .PHONY: fix-style
 fix-style: setup

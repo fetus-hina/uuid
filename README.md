@@ -75,5 +75,12 @@ Please refer the [LICENSE](https://github.com/fetus-hina/uuid/blob/master/LICENS
 Breaking Changes
 ----------------
 
+- v2.0.0
+  - All public classes are marked as `final`. You are not permitted to inherit classes from this library.
+
+  - The parameter type is now explicitly specified.
+    I believe most users will not be affected by this, but you may get unexpected results if you call it using a
+    variable of the wrong type.
+
 - v1.0.0
   - Changed minimum requirement to PHP 7.0

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
-class NS
+final class NS
 {
     const NIL = '00000000-0000-0000-0000-000000000000';
     const DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
@@ -20,27 +20,27 @@ class NS
     const OID = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
     const X500 = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
 
-    public static function nil()
+    public static function nil(): Uuid
     {
         return new Uuid(static::NIL);
     }
 
-    public static function dns()
+    public static function dns(): Uuid
     {
         return new Uuid(static::DNS);
     }
 
-    public static function url()
+    public static function url(): Uuid
     {
         return new Uuid(static::URL);
     }
 
-    public static function oid()
+    public static function oid(): Uuid
     {
         return new Uuid(static::OID);
     }
 
-    public static function x500()
+    public static function x500(): Uuid
     {
         return new Uuid(static::X500);
     }

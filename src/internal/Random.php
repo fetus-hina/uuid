@@ -13,20 +13,26 @@ namespace jp3cki\uuid\internal;
 use Throwable;
 use jp3cki\uuid\Exception;
 
-class Random
+final class Random
 {
-    public static function bytes($length)
+    public static function bytes(int $length): string
     {
         $length = (int)$length;
         $methods = [
-            'byPHP7Random',
-            'byUnixRandom',
-            'byOpenSSLRandom',
+            function (int $length) {
+                return static::byPHP7Random($length);
+            },
+            function (int $length) {
+                return static::byUnixRandom($length);
+            },
+            function (int $length) {
+                return static::byOpenSSLRandom($length);
+            },
         ];
 
         foreach ($methods as $method) {
             try {
-                $r = call_user_func([__CLASS__, $method], $length);
+                $r = call_user_func($method, $length);
                 if (is_string($r) && strlen($r) === $length) {
                     return $r;
                 }
@@ -37,23 +43,31 @@ class Random
         throw new Exception('No random source');
     }
 
-    public static function byPHP7Random($length)
+    /** @return ?string */
+    public static function byPHP7Random(int $length)
     {
         if (function_exists('random_bytes')) {
             return random_bytes($length);
         }
-        return false;
+
+        return null;
     }
 
-    public static function byUnixRandom($length)
+    /** @return ?string */
+    public static function byUnixRandom(int $length)
     {
-        if (file_exists('/dev/urandom')) {
-            return file_get_contents('/dev/urandom', false, null, 0, $length);
+        if (file_exists('/dev/urandom') && is_readable('/dev/urandom')) {
+            $tmp = file_get_contents('/dev/urandom', false, null, 0, $length);
+            if (is_string($tmp) && strlen($tmp) === $length) {
+                return $tmp;
+            }
         }
-        return false;
+
+        return null;
     }
 
-    public static function byOpenSSLRandom($length)
+    /** @return ?string */
+    public static function byOpenSSLRandom(int $length)
     {
         if (function_exists('openssl_random_pseudo_bytes')) {
             $strong = null;
@@ -62,6 +76,7 @@ class Random
                 return $r;
             }
         }
-        return false;
+
+        return null;
     }
 }

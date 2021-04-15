@@ -54,6 +54,23 @@ jobs:
       - name: 'Run PHPCS'
         run: './vendor/bin/phpcs'
 
+  phpStan:
+    name: 'PHP Static Analysis'
+
+    runs-on: 'ubuntu-20.04'
+
+    steps:
+      - uses: 'actions/checkout@v2'
+
+      - name: 'Set up PHP version 8.0'
+        run: sudo update-alternatives --set php /usr/bin/php8.0
+
+      - name: 'Install PHP dependencies'
+        run: 'composer install --prefer-dist'
+
+      - name: 'Run PHPCS'
+        run: './vendor/bin/phpstan'
+
   phpTest:
     name: 'PHP Test (PHP ${{ matrix.envconf.php }} on ${{ matrix.envconf.os }})'
 

@@ -15,13 +15,15 @@ use jp3cki\uuid\Exception;
 use jp3cki\uuid\NS;
 use jp3cki\uuid\Uuid;
 
-class UuidTest extends TestCase
+final class UuidTest extends TestCase
 {
+    /** @return void */
     public function testDefaultConstruct()
     {
         $this->assertEquals(NS::NIL, (new Uuid())->__toString());
     }
 
+    /** @return void */
     public function testGenerateV3()
     {
         $this->assertEquals(
@@ -30,6 +32,7 @@ class UuidTest extends TestCase
         );
     }
 
+    /** @return void */
     public function testGenerateV5()
     {
         $this->assertEquals(
@@ -38,6 +41,7 @@ class UuidTest extends TestCase
         );
     }
 
+    /** @return void */
     public function testGenerateV4()
     {
         $this->assertNotEquals(
@@ -46,6 +50,7 @@ class UuidTest extends TestCase
         );
     }
 
+    /** @return void */
     public function testFormatAsString()
     {
         $this->assertEquals(
@@ -54,6 +59,7 @@ class UuidTest extends TestCase
         );
     }
 
+    /** @return void */
     public function testFormatAsUri()
     {
         $this->assertEquals(
@@ -62,25 +68,29 @@ class UuidTest extends TestCase
         );
     }
 
+    /** @return void */
     public function testGetVersion()
     {
         $this->assertEquals(0, NS::nil()->getVersion());
         $this->assertEquals(1, NS::dns()->getVersion());
     }
 
+    /** @return void */
     public function testConstructFromString()
     {
         $this->assertEquals(NS::DNS, (new Uuid(NS::DNS))->__toString());
     }
 
+    /** @return void */
     public function testConstructFromBinary()
     {
         $this->assertEquals(
             NS::DNS,
-            (new Uuid(hex2bin('6ba7b8109dad11d180b400c04fd430c8')))->__toString()
+            (new Uuid((string)hex2bin('6ba7b8109dad11d180b400c04fd430c8')))->__toString()
         );
     }
 
+    /** @return void */
     public function testConstructFromUri()
     {
         $this->assertEquals(
@@ -89,12 +99,14 @@ class UuidTest extends TestCase
         );
     }
 
+    /** @return void */
     public function testConstructFromBrokenString()
     {
         $this->expectException(Exception::class);
         new Uuid('hoge');
     }
 
+    /** @return void */
     public function testConstructFromBrokenNilUuid()
     {
         $this->expectException(Exception::class);
@@ -103,12 +115,14 @@ class UuidTest extends TestCase
         new Uuid(str_repeat(chr(0), 15) . chr(0xff));
     }
 
+    /** @return void */
     public function testConstructFromUnexpectedType()
     {
         $this->expectException(Exception::class);
-        new Uuid(42);
+        new Uuid(42); // @phpstan-ignore-line
     }
 
+    /** @return void */
     public function testConstructFromInvalidVersion()
     {
         $this->expectException(Exception::class);
@@ -117,6 +131,7 @@ class UuidTest extends TestCase
         //                      ^
     }
 
+    /** @return void */
     public function testConstructFromOtherInstance()
     {
         $this->assertEquals(
