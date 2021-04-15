@@ -11,11 +11,31 @@ declare(strict_types=1);
 namespace jp3cki\uuid;
 
 use jp3cki\uuid\internal\Random;
+use jp3cki\uuid\internal\Timestamp;
 
 final class Uuid
 {
     /** @var string */
     protected $binary;
+
+    /**
+     * @param Mac|string|null $mac
+     */
+    public static function v1($mac = null): self
+    {
+        $timestamp = static::v1Timestamp();
+        $mac = new Mac($mac);
+        $instance = new self();
+        $instance->binary = pack(
+            'Nnn',
+            $timestamp & 0xffffffff,
+            ($timestamp >> 32) & 0xffff,
+            ($timestamp >> 48) & 0xffff
+        );
+        $instance->binary .= Random::bytes(2) . $mac->getBinary();
+        $instance->fix(1);
+        return $instance;
+    }
 
     /**
      * @param self|string $namespace
@@ -160,5 +180,16 @@ final class Uuid
         };
         $manip(6, 0x0f, ($version & 0x0f) << 4);
         $manip(8, 0x3f, 0x80);
+    }
+
+    private static function v1Timestamp(): int
+    {
+        // $baseUnixTime = gmmktime(0, 0, 0, 10, 15, 1582); // 1582-10-15T00:00:00+00:00, -12219292800
+        // if ($baseUnixTime === false) {
+        //     throw new Exception('Could not create UUID v1. Failed to calc timestamp');
+        // }
+        $baseTimestamp = -12219292800 * 1000 * 1000 * 10;
+        $currentTimestamp = Timestamp::currentV1Timestamp();
+        return $currentTimestamp - $baseTimestamp;
     }
 }
