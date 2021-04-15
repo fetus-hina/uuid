@@ -24,6 +24,32 @@ final class UuidTest extends TestCase
     }
 
     /** @return void */
+    public function testGenerateV1()
+    {
+        $now = time();
+
+        $uuid = Uuid::v1('08:00:2b:01:02:03')->__toString();
+        $this->assertTrue((bool)preg_match(
+            '/^([0-9a-f]{8})-([0-9a-f]{4})-1([0-9a-f]{3})-([0-9a-f]{4})-([0-9a-f]{12})$/',
+            $uuid,
+            $match
+        ));
+
+        $this->assertEquals('08002b010203', $match[5]);
+
+        $uuidTS = (intval($match[3], 16) << 48) |
+            (intval($match[2], 16) << 32) |
+            (intval($match[1], 16));
+        $uuidTS += gmmktime(0, 0, 0, 10, 15, 1582) * 1000 * 1000 * 10;
+        $uuidTS = (int)floor($uuidTS / (1000 * 1000 * 10));
+        if (method_exists($this, 'assertEqualsWithDelta')) {
+            $this->assertEqualsWithDelta($now, $uuidTS, 1);
+        } else {
+            $this->assertEquals((float)$now, (float)$uuidTS, '', 1.0); // @phpstan-ignore-line
+        }
+    }
+
+    /** @return void */
     public function testGenerateV3()
     {
         $this->assertEquals(

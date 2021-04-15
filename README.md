@@ -9,7 +9,7 @@ The simple UUID implementation.
 Requirements
 ------------
 
-* PHP ≥ 7.0
+* PHP ≥ 7.0 (64 bit)
 * Basic extensions
     - PCRE (preg)
     - Hash
@@ -26,10 +26,27 @@ $ composer.phar require jp3cki/uuid
 Usage
 -----
 
+### Timestamp-based UUID (version 1)
+
+```php
+<?php
+
+declare(strict_types=1);
+
+require_once(__DIR__ . '/vendor/autoload.php'); // composer autoloader
+
+use jp3cki\uuid\Uuid;
+
+echo Uuid::v1() . "\n";                    // outputs: b45d8864-9db7-11eb-9ef1-4e3ad45d3da7
+echo Uuid::v1('08:00:2b:01:02:03') . "\n"; // outputs: b45d9c96-9db7-11eb-8ec4-08002b010203
+```
+
 ### Random-based UUID (version 4, aka GUID)
 
 ```php
 <?php
+
+declare(strict_types=1);
 
 require_once(__DIR__ . '/vendor/autoload.php'); // composer autoloader
 
@@ -42,6 +59,8 @@ echo Uuid::v4() . "\n"; // outputs: 4c9d5550-f58e-4259-ba00-5e59b15895a0
 
 ```php
 <?php
+
+declare(strict_types=1);
 
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -76,6 +95,8 @@ Breaking Changes
 ----------------
 
 - v2.0.0
+  - This library no longer works with the 32-bit version of PHP.
+
   - All public classes are marked as `final`. You are not permitted to inherit classes from this library.
 
   - The parameter type is now explicitly specified.
