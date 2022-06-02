@@ -15,17 +15,22 @@ use jp3cki\uuid\Exception;
 
 final class Random
 {
+    /**
+     * @param int<1, max> $length
+     */
     public static function bytes(int $length): string
     {
-        $length = (int)$length;
         $methods = [
             function (int $length) {
+                assert($length >= 1);
                 return static::byPHP7Random($length);
             },
             function (int $length) {
+                assert($length >= 1);
                 return static::byUnixRandom($length); // @codeCoverageIgnore
             },
             function (int $length) {
+                assert($length >= 1);
                 return static::byOpenSSLRandom($length); // @codeCoverageIgnore
             },
         ];
@@ -43,7 +48,10 @@ final class Random
         throw new Exception('No random source'); // @codeCoverageIgnore
     }
 
-    /** @return ?string */
+    /**
+     * @param int<1, max> $length
+     * @return string|null
+     */
     public static function byPHP7Random(int $length)
     {
         if (function_exists('random_bytes')) {
@@ -53,7 +61,10 @@ final class Random
         return null; // @codeCoverageIgnore
     }
 
-    /** @return ?string */
+    /**
+     * @param int<1, max> $length
+     * @return string|null
+     */
     public static function byUnixRandom(int $length)
     {
         if (file_exists('/dev/urandom') && is_readable('/dev/urandom')) {
@@ -66,7 +77,10 @@ final class Random
         return null; // @codeCoverageIgnore
     }
 
-    /** @return ?string */
+    /**
+     * @param int<1, max> $length
+     * @return string|null
+     */
     public static function byOpenSSLRandom(int $length)
     {
         if (function_exists('openssl_random_pseudo_bytes')) {

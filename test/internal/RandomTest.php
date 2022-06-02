@@ -17,6 +17,7 @@ final class RandomTest extends TestCase
 {
     /**
      * @dataProvider lengths
+     * @param int<1, max> $length
      * @return void
      */
     public function testBytes(int $length)
@@ -35,6 +36,7 @@ final class RandomTest extends TestCase
 
     /**
      * @dataProvider lengths
+     * @param int<1, max> $length
      * @return void
      */
     public function testByPHP7Random(int $length)
@@ -53,6 +55,7 @@ final class RandomTest extends TestCase
 
     /**
      * @dataProvider lengths
+     * @param int<1, max> $length
      * @return void
      */
     public function testByUnixRandom(int $length)
@@ -71,6 +74,7 @@ final class RandomTest extends TestCase
 
     /**
      * @dataProvider lengths
+     * @param int<1, max> $length
      * @return void
      */
     public function testByOpenSSLRandom(int $length)
@@ -88,7 +92,7 @@ final class RandomTest extends TestCase
     }
 
     /**
-     * @return array<string, int[]>
+     * @return array<string, int<1, max>[]>
      */
     public function lengths(): array
     {

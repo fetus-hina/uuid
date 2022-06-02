@@ -31,7 +31,9 @@ final class MacTest extends TestCase
         }
     }
 
-    /** @return array<int, array> */
+    /**
+     * @return array<int, array{string, bool, string}>
+     */
     public function fromString(): array
     {
         return [
