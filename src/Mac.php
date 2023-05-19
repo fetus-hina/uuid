@@ -12,15 +12,24 @@ namespace jp3cki\uuid;
 
 use jp3cki\uuid\internal\Random;
 
+use function bin2hex;
+use function chr;
+use function hex2bin;
+use function implode;
+use function is_string;
+use function ord;
+use function preg_match;
+use function preg_replace;
+use function strlen;
+use function substr;
+use function trim;
+
 final class Mac
 {
     /** @var string */
     protected $binary;
 
-    /**
-     * @param self|string|null $address
-     */
-    public function __construct($address = null)
+    public function __construct(self|string|null $address = null)
     {
         if ($address instanceof self) {
             $this->binary = $address->binary;

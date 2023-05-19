@@ -10,16 +10,21 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\internal;
 
-use jp3cki\uuid\Exception;
+use function call_user_func;
+use function explode;
+use function floor;
+use function function_exists;
+use function is_int;
+use function microtime;
+use function ord;
+use function time;
 
 final class Timestamp
 {
     public static function currentV1Timestamp(): int
     {
         $methods = [
-            function () {
-                return static::v1Microtime(); // @codeCoverageIgnore
-            },
+            fn () => static::v1Microtime(), // @codeCoverageIgnore
         ];
 
         foreach ($methods as $method) {
@@ -39,7 +44,7 @@ final class Timestamp
             return null; // @codeCoverageIgnore
         }
 
-        list($usec, $sec) = explode(' ', (string)microtime(false), 2);
+        [$usec, $sec] = explode(' ', (string)microtime(false), 2);
         $ts = (int)$sec * 1000 * 1000 * 10; // 100ns tick
         $ts = $ts + (int)floor((float)$usec * 1000 * 1000 * 10);
         return $ts;

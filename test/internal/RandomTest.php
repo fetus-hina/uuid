@@ -13,6 +13,10 @@ namespace jp3cki\uuid\test\internal;
 use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\internal\Random;
 
+use function in_array;
+use function is_string;
+use function strlen;
+
 final class RandomTest extends TestCase
 {
     /**

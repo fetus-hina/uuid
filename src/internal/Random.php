@@ -13,6 +13,17 @@ namespace jp3cki\uuid\internal;
 use Throwable;
 use jp3cki\uuid\Exception;
 
+use function assert;
+use function call_user_func;
+use function file_exists;
+use function file_get_contents;
+use function function_exists;
+use function is_readable;
+use function is_string;
+use function openssl_random_pseudo_bytes;
+use function random_bytes;
+use function strlen;
+
 final class Random
 {
     /**

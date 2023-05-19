@@ -14,6 +14,12 @@ use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\NS;
 use jp3cki\uuid\Uuid;
 
+use function call_user_func;
+use function constant;
+use function is_string;
+use function sprintf;
+use function strtolower;
+
 final class NSTest extends TestCase
 {
     /**

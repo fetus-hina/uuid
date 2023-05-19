@@ -13,15 +13,28 @@ namespace jp3cki\uuid;
 use jp3cki\uuid\internal\Random;
 use jp3cki\uuid\internal\Timestamp;
 
+use function bin2hex;
+use function chr;
+use function hash;
+use function hex2bin;
+use function implode;
+use function is_string;
+use function ord;
+use function pack;
+use function preg_match;
+use function preg_replace;
+use function str_repeat;
+use function strlen;
+use function strtolower;
+use function substr;
+use function trim;
+
 final class Uuid
 {
     /** @var string */
     protected $binary;
 
-    /**
-     * @param Mac|string|null $mac
-     */
-    public static function v1($mac = null): self
+    public static function v1(Mac|string|null $mac = null): self
     {
         $timestamp = static::v1Timestamp();
         $mac = new Mac($mac);
@@ -30,17 +43,14 @@ final class Uuid
             'Nnn',
             $timestamp & 0xffffffff,
             ($timestamp >> 32) & 0xffff,
-            ($timestamp >> 48) & 0xffff
+            ($timestamp >> 48) & 0xffff,
         );
         $instance->binary .= Random::bytes(2) . $mac->getBinary();
         $instance->fix(1);
         return $instance;
     }
 
-    /**
-     * @param self|string $namespace
-     */
-    public static function v3($namespace, string $value): self
+    public static function v3(self|string $namespace, string $value): self
     {
         return static::hashedUuid('md5', 3, $namespace, $value);
     }
@@ -53,10 +63,7 @@ final class Uuid
         return $instance;
     }
 
-    /**
-     * @param self|string $namespace
-     */
-    public static function v5($namespace, string $value): self
+    public static function v5(self|string $namespace, string $value): self
     {
         return static::hashedUuid('sha1', 5, $namespace, $value);
     }
@@ -93,22 +100,16 @@ final class Uuid
         throw new Exception('Given string is not a UUID.');
     }
 
-    /**
-     * @param self|string $ns
-     */
-    protected static function hashedUuid(string $hash, int $version, $ns, string $value): self
+    protected static function hashedUuid(string $hash, int $version, self|string $ns, string $value): self
     {
-        $nsUuid = ($ns instanceof self) ? $ns : new self($ns);
+        $nsUuid = $ns instanceof self ? $ns : new self($ns);
         $instance = new self();
         $instance->binary = substr(hash($hash, $nsUuid->binary . $value, true), 0, 16);
         $instance->fix($version);
         return $instance;
     }
 
-    /**
-     * @param self|string|null $uuid
-     */
-    public function __construct($uuid = null)
+    public function __construct(self|string|null $uuid = null)
     {
         if ($uuid instanceof self) {
             $this->binary = $uuid->binary;
@@ -173,7 +174,7 @@ final class Uuid
     {
         $manip = function (int $offset, int $mask, int $add) {
             $mask = $mask & 0xff;
-            $add  = $add  & 0xff;
+            $add = $add & 0xff;
             $value = ord($this->binary[$offset]);
             $value = ($value & $mask) | $add;
             $this->binary[$offset] = chr($value);

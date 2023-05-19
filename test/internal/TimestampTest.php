@@ -13,6 +13,11 @@ namespace jp3cki\uuid\test\internal;
 use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\internal\Timestamp;
 
+use function assert;
+use function is_int;
+use function method_exists;
+use function time;
+
 final class TimestampTest extends TestCase
 {
     /** @return void */

@@ -15,6 +15,16 @@ use jp3cki\uuid\Exception;
 use jp3cki\uuid\NS;
 use jp3cki\uuid\Uuid;
 
+use function chr;
+use function floor;
+use function gmmktime;
+use function hex2bin;
+use function intval;
+use function method_exists;
+use function preg_match;
+use function str_repeat;
+use function time;
+
 final class UuidTest extends TestCase
 {
     /** @return void */
@@ -32,14 +42,14 @@ final class UuidTest extends TestCase
         $this->assertTrue((bool)preg_match(
             '/^([0-9a-f]{8})-([0-9a-f]{4})-1([0-9a-f]{3})-([0-9a-f]{4})-([0-9a-f]{12})$/',
             $uuid,
-            $match
+            $match,
         ));
 
         $this->assertEquals('08002b010203', $match[5]);
 
         $uuidTS = (intval($match[3], 16) << 48) |
             (intval($match[2], 16) << 32) |
-            (intval($match[1], 16));
+            intval($match[1], 16);
         $uuidTS += gmmktime(0, 0, 0, 10, 15, 1582) * 1000 * 1000 * 10;
         $uuidTS = (int)floor($uuidTS / (1000 * 1000 * 10));
         if (method_exists($this, 'assertEqualsWithDelta')) {
@@ -54,7 +64,7 @@ final class UuidTest extends TestCase
     {
         $this->assertEquals(
             '3d813cbb-47fb-32ba-91df-831e1593ac29',
-            Uuid::v3(NS::dns(), 'www.widgets.com')->__toString()
+            Uuid::v3(NS::dns(), 'www.widgets.com')->__toString(),
         );
     }
 
@@ -63,7 +73,7 @@ final class UuidTest extends TestCase
     {
         $this->assertEquals(
             '74738ff5-5367-5958-9aee-98fffdcd1876',
-            Uuid::v5(NS::dns(), 'www.example.org')->__toString()
+            Uuid::v5(NS::dns(), 'www.example.org')->__toString(),
         );
     }
 
@@ -72,7 +82,7 @@ final class UuidTest extends TestCase
     {
         $this->assertNotEquals(
             Uuid::v4()->__toString(),
-            Uuid::v4()->__toString()
+            Uuid::v4()->__toString(),
         );
     }
 
@@ -81,7 +91,7 @@ final class UuidTest extends TestCase
     {
         $this->assertEquals(
             '3d813cbb-47fb-32ba-91df-831e1593ac29',
-            Uuid::v3(NS::dns(), 'www.widgets.com')->formatAsString()
+            Uuid::v3(NS::dns(), 'www.widgets.com')->formatAsString(),
         );
     }
 
@@ -90,7 +100,7 @@ final class UuidTest extends TestCase
     {
         $this->assertEquals(
             'urn:uuid:3d813cbb-47fb-32ba-91df-831e1593ac29',
-            Uuid::v3(NS::dns(), 'www.widgets.com')->formatAsUri()
+            Uuid::v3(NS::dns(), 'www.widgets.com')->formatAsUri(),
         );
     }
 
@@ -112,7 +122,7 @@ final class UuidTest extends TestCase
     {
         $this->assertEquals(
             NS::DNS,
-            (new Uuid((string)hex2bin('6ba7b8109dad11d180b400c04fd430c8')))->__toString()
+            (new Uuid((string)hex2bin('6ba7b8109dad11d180b400c04fd430c8')))->__toString(),
         );
     }
 
@@ -121,7 +131,7 @@ final class UuidTest extends TestCase
     {
         $this->assertEquals(
             NS::DNS,
-            (new Uuid('urn:uuid:6ba7b810-9dad-11d1-80b4-00c04fd430c8'))->__toString()
+            (new Uuid('urn:uuid:6ba7b810-9dad-11d1-80b4-00c04fd430c8'))->__toString(),
         );
     }
 
@@ -142,13 +152,6 @@ final class UuidTest extends TestCase
     }
 
     /** @return void */
-    public function testConstructFromUnexpectedType()
-    {
-        $this->expectException(Exception::class);
-        new Uuid(42); // @phpstan-ignore-line
-    }
-
-    /** @return void */
     public function testConstructFromInvalidVersion()
     {
         $this->expectException(Exception::class);
@@ -162,7 +165,7 @@ final class UuidTest extends TestCase
     {
         $this->assertEquals(
             NS::DNS,
-            (new Uuid(new Uuid(NS::DNS)))->__toString()
+            (new Uuid(new Uuid(NS::DNS)))->__toString(),
         );
     }
 

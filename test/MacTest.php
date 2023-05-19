@@ -14,6 +14,10 @@ use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\Exception;
 use jp3cki\uuid\Mac;
 
+use function hex2bin;
+use function is_string;
+use function strlen;
+
 final class MacTest extends TestCase
 {
     /**
@@ -81,13 +85,6 @@ final class MacTest extends TestCase
     {
         $instance = new Mac('08:00:2b:01:02:03');
         $this->assertEquals('08:00:2b:01:02:03', $instance->formatEUI());
-    }
-
-    /** @return void */
-    public function testConstructWithInvalidType()
-    {
-        $this->expectException(Exception::class);
-        $instance = new Mac(42); // @phpstan-ignore-line
     }
 
     /** @return void */
