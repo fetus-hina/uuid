@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (C) 2016-2021 AIZAWA Hina
+ * @copyright Copyright (C) 2016-2023 AIZAWA Hina
  * @license https://github.com/fetus-hina/uuid/blob/master/LICENSE MIT
  * @author AIZAWA Hina <hina@fetus.jp>
  */
@@ -16,8 +16,10 @@ use jp3cki\uuid\internal\Timestamp;
 use function bin2hex;
 use function chr;
 use function hash;
+use function hash_algos;
 use function hex2bin;
 use function implode;
+use function in_array;
 use function is_string;
 use function ord;
 use function pack;
@@ -31,8 +33,9 @@ use function trim;
 
 final class Uuid
 {
-    /** @var string */
-    protected $binary;
+    private const BINARY_OCTETS = 16;
+
+    private string $binary = '';
 
     public static function v1(Mac|string|null $mac = null): self
     {
@@ -52,20 +55,20 @@ final class Uuid
 
     public static function v3(self|string $namespace, string $value): self
     {
-        return static::hashedUuid('md5', 3, $namespace, $value);
+        return static::hashedUuid('md5', $namespace, $value);
     }
 
     public static function v4(): self
     {
         $instance = new self();
-        $instance->binary = Random::bytes(16); // 128 bits
+        $instance->binary = Random::bytes(self::BINARY_OCTETS); // 128 bits
         $instance->fix(4);
         return $instance;
     }
 
     public static function v5(self|string $namespace, string $value): self
     {
-        return static::hashedUuid('sha1', 5, $namespace, $value);
+        return static::hashedUuid('sha1', $namespace, $value);
     }
 
     public static function fromString(string $value): self
@@ -76,7 +79,7 @@ final class Uuid
             throw new Exception('Given string is not a valid UUID.');
         }
 
-        if (strlen($value) === 16) {
+        if (strlen($value) === self::BINARY_OCTETS) {
             $instance->binary = $value;
             if (!$instance->isValid()) {
                 throw new Exception('Given string is not a valid UUID.');
@@ -100,26 +103,42 @@ final class Uuid
         throw new Exception('Given string is not a UUID.');
     }
 
-    protected static function hashedUuid(string $hash, int $version, self|string $ns, string $value): self
+    /**
+     * @param 'md5'|'sha1' $hash
+     */
+    private static function hashedUuid(string $hash, self|string $ns, string $value): self
     {
-        $nsUuid = $ns instanceof self ? $ns : new self($ns);
+        if (!in_array($hash, hash_algos(), true)) {
+            throw new Exception("The hash function {$hash} is not supported on this system.");
+        }
+
         $instance = new self();
-        $instance->binary = substr(hash($hash, $nsUuid->binary . $value, true), 0, 16);
-        $instance->fix($version);
+        $instance->binary = substr(
+            hash(
+                $hash,
+                ($ns instanceof self ? $ns : new self($ns))->binary . $value,
+                true,
+            ),
+            0,
+            self::BINARY_OCTETS,
+        );
+        $instance->fix(
+            match ($hash) {
+                'md5' => 3,
+                'sha1' => 5,
+            },
+        );
         return $instance;
     }
 
     public function __construct(self|string|null $uuid = null)
     {
-        if ($uuid instanceof self) {
-            $this->binary = $uuid->binary;
-        } elseif ($uuid === null || $uuid === '') {
-            $this->binary = str_repeat(chr(0), 16);
-        } elseif (is_string($uuid)) {
-            $this->binary = static::fromString($uuid)->binary;
-        } else {
-            throw new Exception('Could not create instance of UUID.');
-        }
+        $this->binary = match (true) {
+            $uuid instanceof self => $uuid->binary,
+            $uuid === null, $uuid === '' => self::nullUuidBinary(),
+            is_string($uuid) => static::fromString($uuid)->binary,
+            // default => throw new Exception('Could not create instance of UUID.'),
+        };
     }
 
     public function __toString(): string
@@ -153,7 +172,7 @@ final class Uuid
     {
         switch ($this->getVersion()) {
             case 0:
-                return $this->binary === str_repeat(chr(0), 16);
+                return $this->binary === self::nullUuidBinary();
 
             case 1:
             case 2:
@@ -167,18 +186,16 @@ final class Uuid
         }
     }
 
-    /**
-     * @return void
-     */
-    protected function fix(int $version)
+    private function fix(int $version): void
     {
-        $manip = function (int $offset, int $mask, int $add) {
+        $manip = function (int $offset, int $mask, int $add): void {
             $mask = $mask & 0xff;
             $add = $add & 0xff;
             $value = ord($this->binary[$offset]);
             $value = ($value & $mask) | $add;
             $this->binary[$offset] = chr($value);
         };
+
         $manip(6, 0x0f, ($version & 0x0f) << 4);
         $manip(8, 0x3f, 0x80);
     }
@@ -192,5 +209,10 @@ final class Uuid
         $baseTimestamp = -12219292800 * 1000 * 1000 * 10;
         $currentTimestamp = Timestamp::currentV1Timestamp();
         return $currentTimestamp - $baseTimestamp;
+    }
+
+    private static function nullUuidBinary(): string
+    {
+        return str_repeat(chr(0), self::BINARY_OCTETS);
     }
 }
