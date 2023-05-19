@@ -9,7 +9,7 @@ The simple UUID implementation.
 Requirements
 ------------
 
-* PHP ≥ 7.0 (64 bit)
+* PHP ≥ 8.0 (64 bit)
 * Basic extensions
     - PCRE (preg)
     - Hash
@@ -93,6 +93,11 @@ Please refer the [LICENSE](https://github.com/fetus-hina/uuid/blob/master/LICENS
 
 Breaking Changes
 ----------------
+
+- v3.0.0
+  - Changed minimum requirement to PHP 8.0.
+
+  - Strict type checking is performed by PHP engine.
 
 - v2.0.0
   - This library no longer works with the 32-bit version of PHP.
