@@ -32,6 +32,16 @@ final class UuidTest extends TestCase
         $this->assertEquals(NS::NIL, (new Uuid())->__toString());
     }
 
+    public function testGenerateNil(): void
+    {
+        $this->assertEquals(NS::NIL, Uuid::nil());
+    }
+
+    public function testGenerateUuid(): void
+    {
+        $this->assertEquals(NS::MAX, Uuid::maxUuid());
+    }
+
     public function testGenerateV1(): void
     {
         $now = time();

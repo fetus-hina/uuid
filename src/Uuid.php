@@ -37,6 +37,16 @@ final class Uuid
 
     private string $binary = '';
 
+    public static function nil(): self
+    {
+        return self::fromString(NS::NIL);
+    }
+
+    public static function maxUuid(): self
+    {
+        return self::fromString(NS::MAX);
+    }
+
     public static function v1(Mac|string|null $mac = null): self
     {
         $timestamp = static::v1Timestamp();
@@ -147,7 +157,7 @@ final class Uuid
     {
         $this->binary = match (true) {
             $uuid instanceof self => $uuid->binary,
-            $uuid === null, $uuid === '' => self::nullUuidBinary(),
+            $uuid === null, $uuid === '' => self::nilUuidBinary(),
             is_string($uuid) => static::fromString($uuid)->binary,
             // default => throw new Exception('Could not create instance of UUID.'),
         };
@@ -183,8 +193,9 @@ final class Uuid
     public function isValid(): bool
     {
         return match ($this->getVersion()) {
-            0 => $this->binary === self::nullUuidBinary(),
+            0 => $this->binary === self::nilUuidBinary(),
             1, 2, 3, 4, 5, 8 => true,
+            15 => $this->binary === self::maxUuidBinary(),
             default => false,
         };
     }
@@ -214,8 +225,13 @@ final class Uuid
         return $currentTimestamp - $baseTimestamp;
     }
 
-    private static function nullUuidBinary(): string
+    private static function nilUuidBinary(): string
     {
         return str_repeat(chr(0), self::BINARY_OCTETS);
+    }
+
+    private static function maxUuidBinary(): string
+    {
+        return str_repeat(chr(0xff), self::BINARY_OCTETS);
     }
 }

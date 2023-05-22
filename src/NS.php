@@ -15,6 +15,7 @@ namespace jp3cki\uuid;
 final class NS
 {
     public const NIL = '00000000-0000-0000-0000-000000000000';
+    public const MAX = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
     public const DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
     public const URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
     public const OID = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
