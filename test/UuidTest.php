@@ -83,6 +83,14 @@ final class UuidTest extends TestCase
         );
     }
 
+    public function testGenerateSha256(): void
+    {
+        $this->assertEquals(
+            'd44a3010-8e6d-8bfb-ae29-59e0267f6516',
+            Uuid::sha256(NS::dns(), 'www.example.org')->__toString(),
+        );
+    }
+
     public function testGenerateV4(): void
     {
         $this->assertNotEquals(

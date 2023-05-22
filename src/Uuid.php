@@ -93,6 +93,11 @@ final class Uuid
         return $instance;
     }
 
+    public static function sha256(self|string $namespace, string $value): self
+    {
+        return static::hashedUuid('sha256', $namespace, $value);
+    }
+
     public static function fromString(string $value): self
     {
         $instance = new self();
@@ -126,7 +131,7 @@ final class Uuid
     }
 
     /**
-     * @param 'md5'|'sha1' $hash
+     * @param 'md5'|'sha1'|'sha256' $hash
      */
     private static function hashedUuid(string $hash, self|string $ns, string $value): self
     {
@@ -148,6 +153,7 @@ final class Uuid
             match ($hash) {
                 'md5' => 3,
                 'sha1' => 5,
+                'sha256' => 8, // custom
             },
         );
         return $instance;
