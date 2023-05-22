@@ -71,6 +71,18 @@ final class Uuid
         return static::hashedUuid('sha1', $namespace, $value);
     }
 
+    public static function v8(string $binary): self
+    {
+        if (strlen($binary) !== self::BINARY_OCTETS) {
+            throw new Exception('The argument must be a binary string of exactly ' . self::BINARY_OCTETS . ' octets.');
+        }
+
+        $instance = new self();
+        $instance->binary = $binary;
+        $instance->fix(8);
+        return $instance;
+    }
+
     public static function fromString(string $value): self
     {
         $instance = new self();
@@ -172,7 +184,7 @@ final class Uuid
     {
         return match ($this->getVersion()) {
             0 => $this->binary === self::nullUuidBinary(),
-            1, 2, 3, 4, 5 => true,
+            1, 2, 3, 4, 5, 8 => true,
             default => false,
         };
     }

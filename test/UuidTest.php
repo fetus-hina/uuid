@@ -81,6 +81,31 @@ final class UuidTest extends TestCase
         );
     }
 
+    public function testGenerateV8(): void
+    {
+        $this->assertEquals(
+            '00000000-0000-8000-8000-000000000000',
+            Uuid::v8(str_repeat(chr(0), 16))->__toString(),
+        );
+
+        $this->assertEquals(
+            'ffffffff-ffff-8fff-bfff-ffffffffffff',
+            Uuid::v8(str_repeat(chr(0xff), 16))->__toString(),
+        );
+    }
+
+    public function testGenerateV8WithBrokenBinary1(): void
+    {
+        $this->expectException(Exception::class);
+        Uuid::v8(str_repeat(chr(0), 15));
+    }
+
+    public function testGenerateV8WithBrokenBinary2(): void
+    {
+        $this->expectException(Exception::class);
+        Uuid::v8(str_repeat(chr(0), 17));
+    }
+
     public function testFormatAsString(): void
     {
         $this->assertEquals(
