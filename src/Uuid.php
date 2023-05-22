@@ -170,20 +170,11 @@ final class Uuid
 
     public function isValid(): bool
     {
-        switch ($this->getVersion()) {
-            case 0:
-                return $this->binary === self::nullUuidBinary();
-
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-                return true;
-
-            default:
-                return false;
-        }
+        return match ($this->getVersion()) {
+            0 => $this->binary === self::nullUuidBinary(),
+            1, 2, 3, 4, 5 => true,
+            default => false,
+        };
     }
 
     private function fix(int $version): void
