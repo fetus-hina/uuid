@@ -10,11 +10,9 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\internal;
 
-use function call_user_func;
 use function explode;
 use function floor;
 use function function_exists;
-use function is_int;
 use function microtime;
 use function ord;
 use function time;
@@ -23,22 +21,10 @@ final class Timestamp
 {
     public static function currentV1Timestamp(): int
     {
-        $methods = [
-            fn () => static::v1Microtime(), // @codeCoverageIgnore
-        ];
-
-        foreach ($methods as $method) {
-            $r = call_user_func($method);
-            if (is_int($r)) {
-                return $r;
-            }
-        }
-
-        return static::v1Time(); // @codeCoverageIgnore
+        return self::v1Microtime() ?? self::v1Time();
     }
 
-    /** @return ?int */
-    public static function v1Microtime()
+    public static function v1Microtime(): ?int
     {
         if (!function_exists('microtime')) {
             return null; // @codeCoverageIgnore
@@ -62,6 +48,7 @@ final class Timestamp
                 break;
             }
         }
+
         return $ts + $r;
     }
 }

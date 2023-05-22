@@ -20,8 +20,7 @@ use function time;
 
 final class TimestampTest extends TestCase
 {
-    /** @return void */
-    public function testCurrentV1Timestamp()
+    public function testCurrentV1Timestamp(): void
     {
         $expectSec = time();
         $v = Timestamp::currentV1Timestamp();
@@ -36,8 +35,7 @@ final class TimestampTest extends TestCase
         }
     }
 
-    /** @return void */
-    public function testV1Microtime()
+    public function testV1Microtime(): void
     {
         $expectSec = time();
         $v = Timestamp::v1Microtime();
@@ -53,8 +51,7 @@ final class TimestampTest extends TestCase
         }
     }
 
-    /** @return void */
-    public function testV1Time()
+    public function testV1Time(): void
     {
         $expectSec = time();
         $v = Timestamp::v1Time();

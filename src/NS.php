@@ -22,26 +22,26 @@ final class NS
 
     public static function nil(): Uuid
     {
-        return new Uuid(static::NIL);
+        return new Uuid(self::NIL);
     }
 
     public static function dns(): Uuid
     {
-        return new Uuid(static::DNS);
+        return new Uuid(self::DNS);
     }
 
     public static function url(): Uuid
     {
-        return new Uuid(static::URL);
+        return new Uuid(self::URL);
     }
 
     public static function oid(): Uuid
     {
-        return new Uuid(static::OID);
+        return new Uuid(self::OID);
     }
 
     public static function x500(): Uuid
     {
-        return new Uuid(static::X500);
+        return new Uuid(self::X500);
     }
 }

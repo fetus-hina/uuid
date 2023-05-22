@@ -27,14 +27,12 @@ use function time;
 
 final class UuidTest extends TestCase
 {
-    /** @return void */
-    public function testDefaultConstruct()
+    public function testDefaultConstruct(): void
     {
         $this->assertEquals(NS::NIL, (new Uuid())->__toString());
     }
 
-    /** @return void */
-    public function testGenerateV1()
+    public function testGenerateV1(): void
     {
         $now = time();
 
@@ -59,8 +57,7 @@ final class UuidTest extends TestCase
         }
     }
 
-    /** @return void */
-    public function testGenerateV3()
+    public function testGenerateV3(): void
     {
         $this->assertEquals(
             '3d813cbb-47fb-32ba-91df-831e1593ac29',
@@ -68,8 +65,7 @@ final class UuidTest extends TestCase
         );
     }
 
-    /** @return void */
-    public function testGenerateV5()
+    public function testGenerateV5(): void
     {
         $this->assertEquals(
             '74738ff5-5367-5958-9aee-98fffdcd1876',
@@ -77,8 +73,7 @@ final class UuidTest extends TestCase
         );
     }
 
-    /** @return void */
-    public function testGenerateV4()
+    public function testGenerateV4(): void
     {
         $this->assertNotEquals(
             Uuid::v4()->__toString(),
@@ -86,8 +81,7 @@ final class UuidTest extends TestCase
         );
     }
 
-    /** @return void */
-    public function testFormatAsString()
+    public function testFormatAsString(): void
     {
         $this->assertEquals(
             '3d813cbb-47fb-32ba-91df-831e1593ac29',
@@ -95,8 +89,7 @@ final class UuidTest extends TestCase
         );
     }
 
-    /** @return void */
-    public function testFormatAsUri()
+    public function testFormatAsUri(): void
     {
         $this->assertEquals(
             'urn:uuid:3d813cbb-47fb-32ba-91df-831e1593ac29',
@@ -104,21 +97,18 @@ final class UuidTest extends TestCase
         );
     }
 
-    /** @return void */
-    public function testGetVersion()
+    public function testGetVersion(): void
     {
         $this->assertEquals(0, NS::nil()->getVersion());
         $this->assertEquals(1, NS::dns()->getVersion());
     }
 
-    /** @return void */
-    public function testConstructFromString()
+    public function testConstructFromString(): void
     {
         $this->assertEquals(NS::DNS, (new Uuid(NS::DNS))->__toString());
     }
 
-    /** @return void */
-    public function testConstructFromBinary()
+    public function testConstructFromBinary(): void
     {
         $this->assertEquals(
             NS::DNS,
@@ -126,8 +116,7 @@ final class UuidTest extends TestCase
         );
     }
 
-    /** @return void */
-    public function testConstructFromUri()
+    public function testConstructFromUri(): void
     {
         $this->assertEquals(
             NS::DNS,
@@ -135,15 +124,13 @@ final class UuidTest extends TestCase
         );
     }
 
-    /** @return void */
-    public function testConstructFromBrokenString()
+    public function testConstructFromBrokenString(): void
     {
         $this->expectException(Exception::class);
         new Uuid('hoge');
     }
 
-    /** @return void */
-    public function testConstructFromBrokenNilUuid()
+    public function testConstructFromBrokenNilUuid(): void
     {
         $this->expectException(Exception::class);
 
@@ -151,8 +138,7 @@ final class UuidTest extends TestCase
         new Uuid(str_repeat(chr(0), 15) . chr(0xff));
     }
 
-    /** @return void */
-    public function testConstructFromInvalidVersion()
+    public function testConstructFromInvalidVersion(): void
     {
         $this->expectException(Exception::class);
         //                      v
@@ -160,8 +146,7 @@ final class UuidTest extends TestCase
         //                      ^
     }
 
-    /** @return void */
-    public function testConstructFromOtherInstance()
+    public function testConstructFromOtherInstance(): void
     {
         $this->assertEquals(
             NS::DNS,
@@ -169,15 +154,13 @@ final class UuidTest extends TestCase
         );
     }
 
-    /** @return void */
-    public function testFromStringEmpty()
+    public function testFromStringEmpty(): void
     {
         $this->expectException(Exception::class);
         Uuid::fromString('');
     }
 
-    /** @return void */
-    public function testFromStringInvalidBinary()
+    public function testFromStringInvalidBinary(): void
     {
         $this->expectException(Exception::class);
         Uuid::fromString((string)hex2bin('74738ff5536769589aee98fffdcd1876'));

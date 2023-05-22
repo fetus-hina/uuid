@@ -22,9 +22,8 @@ final class MacTest extends TestCase
 {
     /**
      * @dataProvider fromString
-     * @return void
      */
-    public function testFromString(string $value, bool $success, string $expect)
+    public function testFromString(string $value, bool $success, string $expect): void
     {
         if ($success) {
             $instance = Mac::fromString($value);
@@ -38,7 +37,7 @@ final class MacTest extends TestCase
     /**
      * @return array<int, array{string, bool, string}>
      */
-    public function fromString(): array
+    public static function fromString(): array
     {
         return [
             ['', false, ''],
@@ -56,8 +55,7 @@ final class MacTest extends TestCase
         ];
     }
 
-    /** @return void */
-    public function testDefaultConstruct()
+    public function testDefaultConstruct(): void
     {
         $instance = new Mac();
         $binary = $instance->getBinary();
@@ -72,23 +70,20 @@ final class MacTest extends TestCase
         $this->assertFalse((new Mac())->getBinary() === $binary);
     }
 
-    /** @return void */
-    public function testCopyConstruct()
+    public function testCopyConstruct(): void
     {
         $instance1 = new Mac();
         $instance2 = new Mac($instance1);
         $this->assertEquals((string)$instance1, (string)$instance2);
     }
 
-    /** @return void */
-    public function testConstructFromString()
+    public function testConstructFromString(): void
     {
         $instance = new Mac('08:00:2b:01:02:03');
         $this->assertEquals('08:00:2b:01:02:03', $instance->formatEUI());
     }
 
-    /** @return void */
-    public function testStringify()
+    public function testStringify(): void
     {
         $instance = new Mac('08:00:2b:01:02:03');
         $this->assertEquals('08:00:2b:01:02:03', $instance->formatEUI());

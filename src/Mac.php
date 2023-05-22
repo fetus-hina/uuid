@@ -26,20 +26,16 @@ use function trim;
 
 final class Mac
 {
-    /** @var string */
-    protected $binary;
+    private string $binary;
 
     public function __construct(self|string|null $address = null)
     {
-        if ($address instanceof self) {
-            $this->binary = $address->binary;
-        } elseif ($address === null || $address === '') {
-            $this->binary = static::random();
-        } elseif (is_string($address)) {
-            $this->binary = static::fromString($address)->binary;
-        } else {
-            throw new Exception('Could not create instance of Mac class.');
-        }
+        $this->binary = match (true) {
+            $address instanceof self => $address->binary,
+            $address === null, $address === '' => self::random(),
+            is_string($address) => self::fromString($address)->binary,
+            // default => throw new Exception('Could not create instance of Mac class.'),
+        };
     }
 
     public function __toString(): string

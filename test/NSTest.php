@@ -24,9 +24,8 @@ final class NSTest extends TestCase
 {
     /**
      * @dataProvider rfc4122Namespaces
-     * @return void
      */
-    public function testRfc4122Namespaces(string $method, string $unused1, string $expect)
+    public function testRfc4122Namespaces(string $method, string $unused1, string $expect): void
     {
         $nsUuid = call_user_func([NS::class, $method]); // @phpstan-ignore-line
         $this->assertInstanceOf(Uuid::class, $nsUuid);
@@ -35,9 +34,8 @@ final class NSTest extends TestCase
 
     /**
      * @dataProvider rfc4122Namespaces
-     * @return void
      */
-    public function testConstants(string $unused1, string $name, string $expect)
+    public function testConstants(string $unused1, string $name, string $expect): void
     {
         $value = constant(sprintf('%s::%s', NS::class, $name));
         $this->assertTrue(is_string($value));
@@ -47,7 +45,7 @@ final class NSTest extends TestCase
     /**
      * @return array<string, string[]>
      */
-    public function rfc4122Namespaces(): array
+    public static function rfc4122Namespaces(): array
     {
         return [
             'nil' => ['nil', 'NIL', '00000000-0000-0000-0000-000000000000'],
