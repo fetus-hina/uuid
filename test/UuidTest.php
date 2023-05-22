@@ -21,6 +21,7 @@ use function gmmktime;
 use function hex2bin;
 use function intval;
 use function method_exists;
+use function microtime;
 use function preg_match;
 use function str_repeat;
 use function time;
@@ -97,6 +98,21 @@ final class UuidTest extends TestCase
             Uuid::v4()->__toString(),
             Uuid::v4()->__toString(),
         );
+    }
+
+    public function testGenerateV7(): void
+    {
+        $now = (int)floor(microtime(true) * 1000);
+
+        $uuid = Uuid::v7()->__toString();
+        $this->assertTrue((bool)preg_match(
+            '/^([0-9a-f]{8})-([0-9a-f]{4})-7([0-9a-f]{3})-([0-9a-f]{4})-([0-9a-f]{12})$/',
+            $uuid,
+            $match,
+        ));
+
+        $uuidTS = (intval($match[1], 16) << 16) | intval($match[2], 16);
+        $this->assertEqualsWithDelta($now, $uuidTS, 1000);
     }
 
     public function testGenerateV8(): void
