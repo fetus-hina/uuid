@@ -194,7 +194,7 @@ final class Uuid
     {
         return match ($this->getVersion()) {
             0 => $this->binary === self::nilUuidBinary(),
-            1, 2, 3, 4, 5, 8 => true,
+            1, 2, 3, 4, 5, 6, 7, 8 => true,
             15 => $this->binary === self::maxUuidBinary(),
             default => false,
         };

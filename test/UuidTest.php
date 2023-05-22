@@ -177,7 +177,7 @@ final class UuidTest extends TestCase
     {
         $this->expectException(Exception::class);
         //                      v
-        new Uuid('74738ff5-5367-6958-9aee-98fffdcd1876');
+        new Uuid('74738ff5-5367-e958-9aee-98fffdcd1876');
         //                      ^
     }
 
@@ -198,6 +198,6 @@ final class UuidTest extends TestCase
     public function testFromStringInvalidBinary(): void
     {
         $this->expectException(Exception::class);
-        Uuid::fromString((string)hex2bin('74738ff5536769589aee98fffdcd1876'));
+        Uuid::fromString((string)hex2bin('74738ff55367e9589aee98fffdcd1876'));
     }
 }
