@@ -4,8 +4,6 @@
  * @copyright Copyright (C) 2016-2023 AIZAWA Hina
  * @license https://github.com/fetus-hina/uuid/blob/master/LICENSE MIT
  * @author AIZAWA Hina <hina@fetus.jp>
- *
- * phpcs:disable PSR12.Properties.ConstantVisibility.NotFound
  */
 
 declare(strict_types=1);
