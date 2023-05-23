@@ -34,9 +34,9 @@ Usage
 
 declare(strict_types=1);
 
-require_once(__DIR__ . '/vendor/autoload.php'); // composer autoloader
-
 use jp3cki\uuid\Uuid;
+
+require_once(__DIR__ . '/vendor/autoload.php'); // composer autoloader
 
 echo Uuid::v1() . "\n";                    // outputs: 171f5526-f910-11ed-88b6-ea8c2b49d6b3
 echo Uuid::v1('08:00:2b:01:02:03') . "\n"; // outputs: 171f6804-f910-11ed-bae3-08002b010203
@@ -56,9 +56,9 @@ echo Uuid::v7() . "\n";                    // outputs: 01884666-7e1c-7cc2-a6e0-3
 
 declare(strict_types=1);
 
-require_once(__DIR__ . '/vendor/autoload.php'); // composer autoloader
-
 use jp3cki\uuid\Uuid;
+
+require_once(__DIR__ . '/vendor/autoload.php'); // composer autoloader
 
 echo Uuid::v4() . "\n"; // outputs: 4c9d5550-f58e-4259-ba00-5e59b15895a0
 ```
@@ -70,10 +70,10 @@ echo Uuid::v4() . "\n"; // outputs: 4c9d5550-f58e-4259-ba00-5e59b15895a0
 
 declare(strict_types=1);
 
-require_once(__DIR__ . '/vendor/autoload.php');
-
 use jp3cki\uuid\Uuid;
 use jp3cki\uuid\NS as UuidNS;
+
+require_once(__DIR__ . '/vendor/autoload.php');
 
 // version 3, MD5
 echo Uuid::v3(UuidNS::dns(), 'www.example.com') . "\n"; // output: 5df41881-3aed-3515-88a7-2f4a814cf09e
@@ -98,12 +98,13 @@ Predefined UUIDs (for "namespace"):
 
 declare(strict_types=1);
 
-require_once(__DIR__ . '/vendor/autoload.php');
-
 use jp3cki\uuid\Uuid;
 use jp3cki\uuid\NS as UuidNS;
 
+require_once(__DIR__ . '/vendor/autoload.php');
+
 echo Uuid::sha256(UuidNS::dns(), 'www.example.com') . "\n"; // output: 401835fd-a627-870a-873f-ed73f2bc5b2c
+
 ```
 
 
@@ -114,9 +115,9 @@ echo Uuid::sha256(UuidNS::dns(), 'www.example.com') . "\n"; // output: 401835fd-
 
 declare(strict_types=1);
 
-require_once(__DIR__ . '/vendor/autoload.php');
-
 use jp3cki\uuid\Uuid;
+
+require_once(__DIR__ . '/vendor/autoload.php');
 
 // Returns an arbitrary 128-bit (16-octet) binary, adjusted to match UUIDv8.
 echo Uuid::v8(str_repeat(chr(0x00), 16)) . "\n"; // output: 00000000-0000-8000-8000-000000000000
