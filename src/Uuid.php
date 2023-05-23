@@ -68,7 +68,7 @@ final class Uuid
 
     public static function v3(self|string $namespace, string $value): self
     {
-        return static::hashedUuid('md5', $namespace, $value);
+        return static::hashedUuid('md5', null, $namespace, $value);
     }
 
     public static function v4(): self
@@ -81,7 +81,7 @@ final class Uuid
 
     public static function v5(self|string $namespace, string $value): self
     {
-        return static::hashedUuid('sha1', $namespace, $value);
+        return static::hashedUuid('sha1', null, $namespace, $value);
     }
 
     public static function v6(Mac|string|null $mac = null): self
@@ -139,7 +139,7 @@ final class Uuid
 
     public static function sha256(self|string $namespace, string $value): self
     {
-        return static::hashedUuid('sha256', $namespace, $value);
+        return static::hashedUuid('sha256', NS::hashSpace('sha256'), $namespace, $value);
     }
 
     public static function fromString(string $value): self
@@ -177,7 +177,7 @@ final class Uuid
     /**
      * @param 'md5'|'sha1'|'sha256' $hash
      */
-    private static function hashedUuid(string $hash, self|string $ns, string $value): self
+    private static function hashedUuid(string $hash, self|null $hashspace, self|string $ns, string $value): self
     {
         if (!in_array($hash, hash_algos(), true)) {
             throw new Exception("The hash function {$hash} is not supported on this system.");
@@ -187,7 +187,11 @@ final class Uuid
         $instance->binary = substr(
             hash(
                 $hash,
-                ($ns instanceof self ? $ns : new self($ns))->binary . $value,
+                implode('', [
+                    (string)$hashspace?->binary,
+                    ($ns instanceof self ? $ns : new self($ns))->binary,
+                    $value,
+                ]),
                 true,
             ),
             0,
@@ -197,9 +201,10 @@ final class Uuid
             match ($hash) {
                 'md5' => 3,
                 'sha1' => 5,
-                'sha256' => 8, // custom
+                default => 8,
             },
         );
+
         return $instance;
     }
 

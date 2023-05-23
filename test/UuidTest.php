@@ -102,9 +102,11 @@ final class UuidTest extends TestCase
 
     public function testGenerateSha256(): void
     {
+        // https://www.ietf.org/archive/id/draft-ietf-uuidrev-rfc4122bis-03.txt
+        // C.8.  Example of a UUIDv8 Value (name-based)
         $this->assertEquals(
-            'd44a3010-8e6d-8bfb-ae29-59e0267f6516',
-            Uuid::sha256(NS::dns(), 'www.example.org')->__toString(),
+            '401835fd-a627-870a-873f-ed73f2bc5b2c',
+            Uuid::sha256(NS::dns(), 'www.example.com')->__toString(),
         );
     }
 
