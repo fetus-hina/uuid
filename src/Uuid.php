@@ -59,7 +59,7 @@ final class Uuid
             'Nnn',
             $timestamp & 0xffffffff,
             ($timestamp >> 32) & 0xffff,
-            ($timestamp >> 48) & 0xffff,
+            ($timestamp >> 48) & 0x0fff,
         );
         $instance->binary .= Random::bytes(2) . $mac->getBinary();
         $instance->fix(1);
@@ -82,6 +82,25 @@ final class Uuid
     public static function v5(self|string $namespace, string $value): self
     {
         return static::hashedUuid('sha1', $namespace, $value);
+    }
+
+    public static function v6(Mac|string|null $mac = null): self
+    {
+        $timestamp = static::v1Timestamp();
+        $mac = new Mac($mac);
+
+        $timeLow = $timestamp & 0x0fff;
+        $timeMid = ($timestamp >> 12) & 0xffff;
+        $timeHigh = ($timestamp >> 28) & 0xffffffff; // 28 = 12 + 16
+
+        $instance = new self();
+        $instance->binary = implode('', [
+            pack('Nnn', $timeHigh, $timeMid, $timeLow),
+            Random::bytes(2), // clock_seq
+            $mac->getBinary(), // node
+        ]);
+        $instance->fix(6);
+        return $instance;
     }
 
     public static function v7(): self

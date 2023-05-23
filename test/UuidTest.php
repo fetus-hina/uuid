@@ -20,7 +20,6 @@ use function floor;
 use function gmmktime;
 use function hex2bin;
 use function intval;
-use function method_exists;
 use function microtime;
 use function preg_match;
 use function str_repeat;
@@ -61,11 +60,28 @@ final class UuidTest extends TestCase
             intval($match[1], 16);
         $uuidTS += gmmktime(0, 0, 0, 10, 15, 1582) * 1000 * 1000 * 10;
         $uuidTS = (int)floor($uuidTS / (1000 * 1000 * 10));
-        if (method_exists($this, 'assertEqualsWithDelta')) {
-            $this->assertEqualsWithDelta($now, $uuidTS, 1);
-        } else {
-            $this->assertEquals((float)$now, (float)$uuidTS, '', 1.0); // @phpstan-ignore-line
-        }
+        $this->assertEqualsWithDelta($now, $uuidTS, 1);
+    }
+
+    public function testGenerateV6(): void
+    {
+        $now = time();
+
+        $uuid = Uuid::v6('08:00:2b:01:02:03')->__toString();
+        $this->assertTrue((bool)preg_match(
+            '/^([0-9a-f]{8})-([0-9a-f]{4})-6([0-9a-f]{3})-([0-9a-f]{4})-([0-9a-f]{12})$/',
+            $uuid,
+            $match,
+        ));
+
+        $this->assertEquals('08002b010203', $match[5]);
+
+        $uuidTS = (intval($match[1], 16) << 28) |
+            (intval($match[2], 16) << 12) |
+            intval($match[3], 16);
+        $uuidTS += gmmktime(0, 0, 0, 10, 15, 1582) * 1000 * 1000 * 10;
+        $uuidTS = (int)floor($uuidTS / (1000 * 1000 * 10));
+        $this->assertEqualsWithDelta($now, $uuidTS, 1);
     }
 
     public function testGenerateV3(): void
