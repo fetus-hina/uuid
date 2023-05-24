@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
+use Stringable;
 use jp3cki\uuid\internal\Random;
 use jp3cki\uuid\internal\Timestamp;
 
@@ -32,9 +33,8 @@ use function str_repeat;
 use function strlen;
 use function strtolower;
 use function substr;
-use function trim;
 
-final class Uuid
+final class Uuid implements Stringable
 {
     private const BINARY_OCTETS = 16;
 
@@ -42,12 +42,20 @@ final class Uuid
 
     public static function nil(): self
     {
-        return self::fromString(NS::NIL);
+        return new self(self::nilBinary());
     }
 
+    public static function max(): self
+    {
+        return new self(self::maxBinary());
+    }
+
+    /**
+     * @deprecated 3.1.0
+     */
     public static function maxUuid(): self
     {
-        return self::fromString(NS::MAX);
+        return self::max();
     }
 
     public static function v1(Mac|string|null $mac = null): self
@@ -145,17 +153,16 @@ final class Uuid
     public static function fromString(string $value): self
     {
         $instance = new self();
-        $value = trim($value);
-        if ($value === '') {
-            throw new Exception('Given string is not a valid UUID.');
-        }
-
         if (strlen($value) === self::BINARY_OCTETS) {
             $instance->binary = $value;
             if (!$instance->isValid()) {
                 throw new Exception('Given string is not a valid UUID.');
             }
             return $instance;
+        }
+
+        if ($value === '') {
+            throw new Exception('Given string is not a valid UUID.');
         }
 
         $value = (string)preg_replace('/(?:urn|uuid):|[{}-]/', '', $value);
@@ -212,8 +219,8 @@ final class Uuid
     {
         $this->binary = match (true) {
             $uuid instanceof self => $uuid->binary,
-            $uuid === null, $uuid === '' => self::nilUuidBinary(),
-            is_string($uuid) => static::fromString($uuid)->binary,
+            $uuid === null, $uuid === '' => self::nilBinary(),
+            is_string($uuid) => self::fromString($uuid)->binary,
             // default => throw new Exception('Could not create instance of UUID.'),
         };
     }
@@ -248,9 +255,9 @@ final class Uuid
     public function isValid(): bool
     {
         return match ($this->getVersion()) {
-            0 => $this->binary === self::nilUuidBinary(),
+            0 => $this->binary === self::nilBinary(),
             1, 2, 3, 4, 5, 6, 7, 8 => true,
-            15 => $this->binary === self::maxUuidBinary(),
+            15 => $this->binary === self::maxBinary(),
             default => false,
         };
     }
@@ -280,12 +287,12 @@ final class Uuid
         return $currentTimestamp - $baseTimestamp;
     }
 
-    private static function nilUuidBinary(): string
+    private static function nilBinary(): string
     {
         return str_repeat(chr(0), self::BINARY_OCTETS);
     }
 
-    private static function maxUuidBinary(): string
+    private static function maxBinary(): string
     {
         return str_repeat(chr(0xff), self::BINARY_OCTETS);
     }

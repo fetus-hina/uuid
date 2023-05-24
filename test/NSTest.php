@@ -81,6 +81,7 @@ final class NSTest extends TestCase
     {
         return [
             'nil' => ['nil', 'NIL', '00000000-0000-0000-0000-000000000000'],
+            'max' => ['max', 'MAX', 'ffffffff-ffff-ffff-ffff-ffffffffffff'],
             'dns' => ['dns', 'DNS', '6ba7b810-9dad-11d1-80b4-00c04fd430c8'],
             'url' => ['url', 'URL', '6ba7b811-9dad-11d1-80b4-00c04fd430c8'],
             'oid' => ['oid', 'OID', '6ba7b812-9dad-11d1-80b4-00c04fd430c8'],

@@ -34,12 +34,13 @@ final class UuidTest extends TestCase
 
     public function testGenerateNil(): void
     {
-        $this->assertEquals(NS::NIL, Uuid::nil());
+        $this->assertEquals(NS::NIL, (string)Uuid::nil());
     }
 
     public function testGenerateUuid(): void
     {
-        $this->assertEquals(NS::MAX, Uuid::maxUuid());
+        $this->assertEquals(NS::MAX, (string)Uuid::max());
+        $this->assertEquals(NS::MAX, (string)Uuid::maxUuid());
     }
 
     public function testGenerateV1(): void

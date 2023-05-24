@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
+use Stringable;
 use jp3cki\uuid\internal\Random;
 
 use function bin2hex;
@@ -24,7 +25,7 @@ use function strlen;
 use function substr;
 use function trim;
 
-final class Mac
+final class Mac implements Stringable
 {
     private string $binary;
 

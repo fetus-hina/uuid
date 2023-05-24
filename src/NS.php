@@ -41,6 +41,11 @@ final class NS
         return new Uuid(self::NIL);
     }
 
+    public static function max(): Uuid
+    {
+        return new Uuid(self::MAX);
+    }
+
     public static function dns(): Uuid
     {
         return new Uuid(self::DNS);
