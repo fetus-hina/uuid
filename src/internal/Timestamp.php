@@ -15,6 +15,7 @@ use function floor;
 use function function_exists;
 use function microtime;
 use function ord;
+use function random_int;
 use function time;
 
 final class Timestamp
@@ -50,5 +51,24 @@ final class Timestamp
         }
 
         return $ts + $r;
+    }
+
+    public static function currentUlidTime(): int
+    {
+        return self::ulidMicrotime() ?? self::ulidTime();
+    }
+
+    public static function ulidMicrotime(): ?int
+    {
+        if (!function_exists('microtime')) {
+            return null; // @codeCoverageIgnore
+        }
+
+        return (int)floor(microtime(true) * 1000);
+    }
+
+    public static function ulidTime(): int
+    {
+        return time() * 1000 + random_int(0, 999);
     }
 }

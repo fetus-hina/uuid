@@ -4,7 +4,7 @@ jp3cki/uuid
 [![Latest Stable Version](https://poser.pugx.org/jp3cki/uuid/v)](//packagist.org/packages/jp3cki/uuid)
 [![License](https://poser.pugx.org/jp3cki/uuid/license)](//packagist.org/packages/jp3cki/uuid)
 
-A simple UUID implementation.<br>
+A simple UUID and ULID implementation.<br>
 UUIDv6, v7 and v8 are implemented based on the [draft](https://www.ietf.org/archive/id/draft-ietf-uuidrev-rfc4122bis-03.txt).
 
 Requirements
@@ -125,6 +125,21 @@ echo Uuid::v8(str_repeat(chr(0x00), 16)) . "\n"; // output: 00000000-0000-8000-8
 // You can also give a random number sequence, but you should use UUIDv4.
 echo Uuid::v8(random_bytes(16)) . "\n";          // output: bfc47fb7-948f-8833-87e0-cae07c85d30d
 echo Uuid::v4() . "\n";
+
+```
+
+### ULID
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use jp3cki\uuid\Ulid;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+echo (new Ulid()) . "\n";
 
 ```
 

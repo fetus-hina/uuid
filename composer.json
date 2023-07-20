@@ -13,7 +13,8 @@
         "php": ">= 8.0",
         "php-64bit": ">= 8.0",
         "ext-pcre": "*",
-        "ext-hash": "*"
+        "ext-hash": "*",
+        "paragonie/constant_time_encoding": "^2.6"
     },
     "require-dev": {
         "jp3cki/coding-standard": "*",
