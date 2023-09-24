@@ -14,13 +14,25 @@
         "php-64bit": ">= 8.0",
         "ext-pcre": "*",
         "ext-hash": "*",
-        "paragonie/constant_time_encoding": "^2.6"
+        "arokettu/random-polyfill": "^1.0",
+        "paragonie/constant_time_encoding": "^2.6",
+        "symfony/polyfill-php82": "^1.28"
     },
     "require-dev": {
         "jp3cki/coding-standard": "*",
         "phpstan/phpstan": "*",
         "phpunit/phpunit": "*",
         "squizlabs/php_codesniffer": "*"
+    },
+    "replace": {
+        "symfony/polyfill-php54": "*",
+        "symfony/polyfill-php55": "*",
+        "symfony/polyfill-php56": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*"
     },
     "autoload": {
         "psr-4": {
@@ -33,7 +45,7 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         },
         "platform": {
-            "php": "8.0.28"
+            "php": "8.0.30"
         }
     }
 }
