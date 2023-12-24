@@ -155,6 +155,9 @@ Please refer the [LICENSE](https://github.com/fetus-hina/uuid/blob/master/LICENS
 Breaking Changes
 ----------------
 
+- v4.0.0
+  - Changed minimum requirement to PHP 8.1.
+
 - v3.0.0
   - Changed minimum requirement to PHP 8.0.
 
