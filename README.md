@@ -10,7 +10,7 @@ UUIDv6, v7 and v8 are implemented based on the [draft](https://www.ietf.org/arch
 Requirements
 ------------
 
-* PHP ≥ 8.0 (64 bit)
+* PHP ≥ 8.1 (64 bit)
 * Basic extensions
     - PCRE (preg)
     - Hash
