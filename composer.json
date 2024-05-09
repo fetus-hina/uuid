@@ -15,7 +15,7 @@
         "ext-pcre": "*",
         "ext-hash": "*",
         "arokettu/random-polyfill": "^1.0",
-        "paragonie/constant_time_encoding": "^2.6",
+        "paragonie/constant_time_encoding": "^2.6 || ^3.0",
         "symfony/polyfill-php82": "^1.28"
     },
     "require-dev": {
