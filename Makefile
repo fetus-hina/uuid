@@ -6,7 +6,7 @@ setup: composer.phar vendor
 
 .PHONY: test
 test: setup
-	env XDEBUG_MODE=coverage vendor/bin/phpunit
+	vendor/bin/phpunit
 
 .PHONY: check-style
 check-style: setup
