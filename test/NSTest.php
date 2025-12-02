@@ -46,13 +46,8 @@ final class NSTest extends TestCase
     /**
      * @dataProvider rfc4122HashSpaces
      */
-    public function testHashSpaces(?string $algo, string $constName, string $expect): void
+    public function testHashSpaces(string $algo, string $constName, string $expect): void
     {
-        if ($algo === null) {
-            $this->assertTrue(true);
-            return;
-        }
-
         $nsUuid = NS::hashSpace($algo);
         $this->assertInstanceOf(Uuid::class, $nsUuid);
         $this->assertEquals($expect, (string)$nsUuid);
@@ -105,8 +100,8 @@ final class NSTest extends TestCase
             'sha3-256' => ['sha3-256', 'HASH_SPACE_SHA3_256', '2034d66b-4047-4553-8f80-70e593176877'],
             'sha3-384' => ['sha3-384', 'HASH_SPACE_SHA3_384', '872fb339-2636-4bdd-bda6-b6dc2a82b1b3'],
             'sha3-512' => ['sha3-512', 'HASH_SPACE_SHA3_512', 'a4920a5d-a8a6-426c-8d14-a6cafbe64c7b'],
-            'shake128' => [null, 'HASH_SPACE_SHAKE_128', '7ea218f6-629a-425f-9f88-7439d63296bb'],
-            'shake256' => [null, 'HASH_SPACE_SHAKE_256', '2e7fc6a4-2919-4edc-b0ba-7d7062ce4f0a'],
+            // 'shake128' => [null, 'HASH_SPACE_SHAKE_128', '7ea218f6-629a-425f-9f88-7439d63296bb'],
+            // 'shake256' => [null, 'HASH_SPACE_SHAKE_256', '2e7fc6a4-2919-4edc-b0ba-7d7062ce4f0a'],
         ];
     }
 }

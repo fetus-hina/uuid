@@ -13,7 +13,6 @@ namespace jp3cki\uuid\test\internal;
 use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\internal\CrockfordBase32;
 
-use function is_string;
 use function strtolower;
 use function strtoupper;
 
@@ -26,7 +25,6 @@ final class CrockfordBase32Test extends TestCase
     public function testEncodeIntegerLower(int $num, string $expected): void
     {
         $encoded = CrockfordBase32::encodeIntegerLower($num);
-        $this->assertTrue(is_string($encoded));
         $this->assertEquals(strtolower($expected), $encoded);
     }
 
@@ -37,7 +35,6 @@ final class CrockfordBase32Test extends TestCase
     public function testEncodeIntegerUpper(int $num, string $expected): void
     {
         $encoded = CrockfordBase32::encodeIntegerUpper($num);
-        $this->assertTrue(is_string($encoded));
         $this->assertEquals(strtoupper($expected), $encoded);
     }
 

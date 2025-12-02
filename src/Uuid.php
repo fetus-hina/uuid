@@ -14,6 +14,7 @@ use Stringable;
 use jp3cki\uuid\internal\Random;
 use jp3cki\uuid\internal\Timestamp;
 
+use function assert;
 use function bin2hex;
 use function chr;
 use function floor;
@@ -22,6 +23,7 @@ use function hash_algos;
 use function hex2bin;
 use function implode;
 use function in_array;
+use function is_int;
 use function is_string;
 use function microtime;
 use function ord;
@@ -48,14 +50,6 @@ final class Uuid implements Stringable
     public static function max(): self
     {
         return new self(self::maxBinary());
-    }
-
-    /**
-     * @deprecated 3.1.0
-     */
-    public static function maxUuid(): self
-    {
-        return self::max();
     }
 
     public static function v1(Mac|string|null $mac = null): self
@@ -121,6 +115,7 @@ final class Uuid implements Stringable
             $seqNo = random_int(0x0000, 0x0f00);
         }
 
+        assert(is_int($seqNo));
         $seqNo = ($seqNo + 1) % 0x1000;
 
         $unixTsMs = (int)floor(microtime(true) * 1000);
