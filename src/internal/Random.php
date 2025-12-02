@@ -29,31 +29,4 @@ final class Random
             throw new Exception('No random source', 0, $e);
         }
     }
-
-    /**
-     * @deprecated
-     * @param int<1, max> $length
-     */
-    public static function byPHP7Random(int $length): ?string
-    {
-        return self::bytes($length);
-    }
-
-    /**
-     * @deprecated
-     * @param int<1, max> $length
-     */
-    public static function byUnixRandom(int $length): ?string
-    {
-        return self::bytes($length);
-    }
-
-    /**
-     * @deprecated
-     * @param int<1, max> $length
-     */
-    public static function byOpenSSLRandom(int $length): ?string
-    {
-        return self::bytes($length);
-    }
 }

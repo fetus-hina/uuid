@@ -23,7 +23,6 @@ final class TimestampTest extends TestCase
     {
         $expectSec = time();
         $v = Timestamp::currentV1Timestamp();
-        $this->assertTrue(is_int($v));
 
         // 秒精度で一致するはず
         $timeSec = (int)($v / (1000 * 1000 * 10));
@@ -34,7 +33,6 @@ final class TimestampTest extends TestCase
     {
         $expectSec = time();
         $v = Timestamp::v1Microtime();
-        $this->assertTrue(is_int($v));
 
         // 秒精度で一致するはず
         assert(is_int($v));
@@ -46,7 +44,6 @@ final class TimestampTest extends TestCase
     {
         $expectSec = time();
         $v = Timestamp::v1Time();
-        $this->assertTrue(is_int($v));
 
         // 秒精度で一致するはず
         $timeSec = (int)($v / (1000 * 1000 * 10));
@@ -57,7 +54,6 @@ final class TimestampTest extends TestCase
     {
         $expectSec = time();
         $v = Timestamp::currentUlidTime();
-        $this->assertTrue(is_int($v));
 
         // 秒精度で一致するはず
         $timeSec = (int)($v / 1000);
@@ -71,7 +67,6 @@ final class TimestampTest extends TestCase
         $this->assertTrue(is_int($v));
 
         // 秒精度で一致するはず
-        assert(is_int($v));
         $timeSec = (int)($v / 1000);
         $this->assertEqualsWithDelta($expectSec, $timeSec, 1);
     }
@@ -80,7 +75,6 @@ final class TimestampTest extends TestCase
     {
         $expectSec = time();
         $v = Timestamp::ulidTime();
-        $this->assertTrue(is_int($v));
 
         // 秒精度で一致するはず
         $timeSec = (int)($v / 1000);

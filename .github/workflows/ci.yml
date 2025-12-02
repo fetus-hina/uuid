@@ -9,14 +9,14 @@ jobs:
       matrix:
         envconf:
           -
-            php: '8.1'
-          -
             php: '8.2'
           -
             php: '8.3'
           -
             php: '8.4'
-    runs-on: ubuntu-22.04
+          -
+            php: '8.5'
+    runs-on: ubuntu-24.04
     steps:
       -
         uses: actions/checkout@v4
@@ -34,15 +34,15 @@ jobs:
             xargs ${{ matrix.envconf.php >= 8.3 && ' ' || '-n 1'}} php -l
   phpStyleCheck:
     name: 'PHP Coding Style'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       -
         uses: actions/checkout@v4
       -
-        name: 'Set up PHP version 8.1'
+        name: 'Set up PHP version 8.2'
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
       -
         name: 'Install PHP dependencies'
         run: 'composer install --prefer-dist'
@@ -51,15 +51,15 @@ jobs:
         run: ./vendor/bin/phpcs
   phpStan:
     name: 'PHP Static Analysis'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       -
         uses: actions/checkout@v4
       -
-        name: 'Set up PHP version 8.1'
+        name: 'Set up PHP version 8.2'
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
       -
         name: 'Install PHP dependencies'
         run: 'composer install --prefer-dist'
@@ -72,14 +72,14 @@ jobs:
       matrix:
         envconf:
           -
-            php: '8.1'
-          -
             php: '8.2'
           -
             php: '8.3'
           -
             php: '8.4'
-    runs-on: ubuntu-22.04
+          -
+            php: '8.5'
+    runs-on: ubuntu-24.04
     steps:
       -
         uses: actions/checkout@v4

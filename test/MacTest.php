@@ -15,7 +15,6 @@ use jp3cki\uuid\Exception;
 use jp3cki\uuid\Mac;
 
 use function hex2bin;
-use function is_string;
 use function strlen;
 
 final class MacTest extends TestCase
@@ -59,7 +58,6 @@ final class MacTest extends TestCase
     {
         $instance = new Mac();
         $binary = $instance->getBinary();
-        $this->assertTrue(is_string($binary));
         $this->assertEquals(6, strlen($binary));
         $this->assertTrue($instance->isUnicast());
         $this->assertFalse($instance->isMulticast());
