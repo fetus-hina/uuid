@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 use jp3cki\uuid\NS;
@@ -23,9 +24,7 @@ use function strtolower;
 
 final class NSTest extends TestCase
 {
-    /**
-     * @dataProvider rfc4122Namespaces
-     */
+    #[DataProvider('rfc4122Namespaces')]
     public function testRfc4122Namespaces(string $method, string $unused1, string $expect): void
     {
         $nsUuid = call_user_func([NS::class, $method]); // @phpstan-ignore-line
@@ -33,9 +32,7 @@ final class NSTest extends TestCase
         $this->assertEquals($expect, (string)$nsUuid);
     }
 
-    /**
-     * @dataProvider rfc4122Namespaces
-     */
+    #[DataProvider('rfc4122Namespaces')]
     public function testConstants(string $unused1, string $name, string $expect): void
     {
         $value = constant(sprintf('%s::%s', NS::class, $name));
@@ -43,9 +40,7 @@ final class NSTest extends TestCase
         $this->assertEquals(strtolower($expect), strtolower($value));
     }
 
-    /**
-     * @dataProvider rfc4122HashSpaces
-     */
+    #[DataProvider('rfc4122HashSpaces')]
     public function testHashSpaces(string $algo, string $constName, string $expect): void
     {
         $nsUuid = NS::hashSpace($algo);
@@ -59,9 +54,7 @@ final class NSTest extends TestCase
         NS::hashSpace('md4');
     }
 
-    /**
-     * @dataProvider rfc4122HashSpaces
-     */
+    #[DataProvider('rfc4122HashSpaces')]
     public function testHashConstants(?string $algo, string $constName, string $expect): void
     {
         $value = constant(sprintf('%s::%s', NS::class, $constName));

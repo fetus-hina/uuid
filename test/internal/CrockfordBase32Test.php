@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\test\internal;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\internal\CrockfordBase32;
 
@@ -19,9 +20,9 @@ use function strtoupper;
 final class CrockfordBase32Test extends TestCase
 {
     /**
-     * @dataProvider integers
      * @param int<0, max> $num
      */
+    #[DataProvider('integers')]
     public function testEncodeIntegerLower(int $num, string $expected): void
     {
         $encoded = CrockfordBase32::encodeIntegerLower($num);
@@ -29,9 +30,9 @@ final class CrockfordBase32Test extends TestCase
     }
 
     /**
-     * @dataProvider integers
      * @param int<0, max> $num
      */
+    #[DataProvider('integers')]
     public function testEncodeIntegerUpper(int $num, string $expected): void
     {
         $encoded = CrockfordBase32::encodeIntegerUpper($num);

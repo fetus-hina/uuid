@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\Exception;
 use jp3cki\uuid\Mac;
@@ -19,9 +20,7 @@ use function strlen;
 
 final class MacTest extends TestCase
 {
-    /**
-     * @dataProvider fromString
-     */
+    #[DataProvider('fromString')]
     public function testFromString(string $value, bool $success, string $expect): void
     {
         if ($success) {

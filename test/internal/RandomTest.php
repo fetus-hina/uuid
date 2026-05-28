@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\test\internal;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\internal\Random;
 
@@ -19,9 +20,9 @@ use function strlen;
 final class RandomTest extends TestCase
 {
     /**
-     * @dataProvider lengths
      * @param int<1, max> $length
      */
+    #[DataProvider('lengths')]
     public function testBytes(int $length): void
     {
         $processed = [];
