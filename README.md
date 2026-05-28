@@ -155,6 +155,21 @@ Please refer the [LICENSE](https://github.com/fetus-hina/uuid/blob/master/LICENS
 Breaking Changes
 ----------------
 
+- v6.0.0
+  - `Uuid::isValid()` now also validates the variant bits. UUIDs with the NCS
+    variant (`0b0xxx`) or the reserved variant (`0b111x`) are no longer
+    accepted; only the RFC 4122 variant (`0b10xx`) and the Microsoft GUID
+    variant (`0b110x`) pass. Strings that round-tripped through
+    `Uuid::fromString()` and `isValid()` in v5 may now be reported as invalid.
+
+  - `Uuid::v7()` no longer guarantees monotonic ordering within the same
+    millisecond. The previous process-wide `rand_a` counter has been replaced
+    by per-call CSPRNG output, which removes cross-request correlation and the
+    4096-per-ms wrap hazard. Sortability is still guaranteed at millisecond
+    granularity, which is what RFC 9562 §5.7 requires; code that relied on
+    strict intra-millisecond order needs to switch to UUIDv6 or carry an
+    explicit sequence column.
+
 - v5.0.0
   - Changed minimum requirement to PHP 8.2.
 
