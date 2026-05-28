@@ -14,23 +14,18 @@ use Stringable;
 use jp3cki\uuid\internal\Random;
 use jp3cki\uuid\internal\Timestamp;
 
-use function assert;
 use function bin2hex;
 use function chr;
-use function floor;
 use function hash;
 use function hash_algos;
 use function hex2bin;
 use function implode;
 use function in_array;
-use function is_int;
 use function is_string;
-use function microtime;
 use function ord;
 use function pack;
 use function preg_match;
 use function preg_replace;
-use function random_int;
 use function str_repeat;
 use function strlen;
 use function strtolower;
@@ -107,23 +102,14 @@ final class Uuid implements Stringable
 
     public static function v7(): self
     {
-        static $seqNo = null;
-        if ($seqNo === null) {
-            // The initial value of the sequence number is created at random.
-            // The maximum value of this number may be 0xfff, but it may wrap up with a small number of generation.
-            // So, a little margin is given to ensure the number of IDs generated is not a problem in practical use.
-            $seqNo = random_int(0x0000, 0x0f00);
-        }
-
-        assert(is_int($seqNo));
-        $seqNo = ($seqNo + 1) % 0x1000;
-
-        $unixTsMs = (int)floor(microtime(true) * 1000);
-        $unixTsMsBin64 = pack('J', $unixTsMs);
-        $tsBin = substr($unixTsMsBin64, -6) . pack('n', $seqNo);
+        // rand_a (12 bits) and rand_b (62 bits) are both filled from CSPRNG.
+        // This deliberately gives up intra-millisecond monotonicity in exchange
+        // for unpredictability and freedom from cross-process state correlation.
+        // RFC 9562 §5.7 permits this; sortability still holds at millisecond granularity.
+        $tsBin = substr(pack('J', Timestamp::currentUlidTime()), -6);
 
         $instance = new self();
-        $instance->binary = $tsBin . Random::bytes(self::BINARY_OCTETS - (6 + 2));
+        $instance->binary = $tsBin . Random::bytes(self::BINARY_OCTETS - 6);
         $instance->fix(7);
         return $instance;
     }
