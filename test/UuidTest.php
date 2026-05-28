@@ -223,6 +223,31 @@ final class UuidTest extends TestCase
         //                      ^
     }
 
+    public function testConstructFromInvalidVariantNcs(): void
+    {
+        // byte 8 starts with 0..7 (top bit clear) -> NCS variant, must be rejected
+        $this->expectException(Exception::class);
+        //                           v
+        new Uuid('74738ff5-5367-5958-1aee-98fffdcd1876');
+        //                           ^
+    }
+
+    public function testConstructFromValidVariantMicrosoft(): void
+    {
+        // byte 8 starts with c or d -> Microsoft GUID variant, accepted for interop
+        $value = '74738ff5-5367-5958-caee-98fffdcd1876';
+        $this->assertEquals($value, (new Uuid($value))->__toString());
+    }
+
+    public function testConstructFromInvalidVariantReserved(): void
+    {
+        // byte 8 starts with e or f -> reserved variant, must be rejected
+        $this->expectException(Exception::class);
+        //                           v
+        new Uuid('74738ff5-5367-5958-eaee-98fffdcd1876');
+        //                           ^
+    }
+
     public function testConstructFromOtherInstance(): void
     {
         $this->assertEquals(

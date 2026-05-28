@@ -251,10 +251,19 @@ final class Uuid implements Stringable
     {
         return match ($this->getVersion()) {
             0 => $this->binary === self::nilBinary(),
-            1, 2, 3, 4, 5, 6, 7, 8 => true,
+            1, 2, 3, 4, 5, 6, 7, 8 => $this->hasAcceptedVariant(),
             15 => $this->binary === self::maxBinary(),
             default => false,
         };
+    }
+
+    private function hasAcceptedVariant(): bool
+    {
+        // Accept RFC 4122 (0b10xx) and Microsoft GUID (0b110x).
+        // Reject NCS (0b0xxx) and the reserved variant (0b111x).
+        $byte = ord($this->binary[8]);
+        return ($byte & 0xc0) === 0x80
+            || ($byte & 0xe0) === 0xc0;
     }
 
     private function fix(int $version): void
