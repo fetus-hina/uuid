@@ -11,8 +11,11 @@
     "require": {
         "php": ">= 8.3",
         "php-64bit": ">= 8.3",
+        "ext-date": "*",
         "ext-hash": "*",
         "ext-pcre": "*",
+        "ext-random": "*",
+        "ext-spl": "*",
         "paragonie/constant_time_encoding": "^3.1.4"
     },
     "require-dev": {
