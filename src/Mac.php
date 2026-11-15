@@ -63,7 +63,7 @@ final class Mac implements Stringable
 
     private function formatImpl(string $sep): string
     {
-        $hex = (string)bin2hex((string)$this->binary);
+        $hex = bin2hex($this->binary);
         return implode($sep, [
             substr($hex, 0, 2),
             substr($hex, 2, 2),
