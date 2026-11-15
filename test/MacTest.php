@@ -65,8 +65,9 @@ final class MacTest extends TestCase
         $instance = new Mac();
         $binary = $instance->getBinary();
         $this->assertEquals(6, strlen($binary));
-        $this->assertTrue($instance->isUnicast());
-        $this->assertFalse($instance->isMulticast());
+        // RFC 9562 §6.10: a random node ID must have the multicast bit set
+        $this->assertFalse($instance->isUnicast());
+        $this->assertTrue($instance->isMulticast());
         $this->assertTrue($instance->isLocal());
         $this->assertFalse($instance->isUniversal());
 
@@ -91,7 +92,7 @@ final class MacTest extends TestCase
     {
         $instance = new Mac('');
         $this->assertEquals(6, strlen($instance->getBinary()));
-        $this->assertTrue($instance->isUnicast());
+        $this->assertTrue($instance->isMulticast());
         $this->assertTrue($instance->isLocal());
     }
 

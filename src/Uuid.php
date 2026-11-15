@@ -58,7 +58,8 @@ final class Uuid implements Stringable
             ($timestamp >> 32) & 0xffff,
             ($timestamp >> 48) & 0x0fff,
         );
-        $instance->binary .= Random::bytes(2) . self::nodeId($mac);
+        // Without an explicit MAC, Mac generates a random node with the multicast bit set (RFC 9562 §6.10).
+        $instance->binary .= Random::bytes(2) . (new Mac($mac))->getBinary();
         $instance->fix(1);
         return $instance;
     }
@@ -93,7 +94,7 @@ final class Uuid implements Stringable
         $instance->binary = implode('', [
             pack('Nnn', $timeHigh, $timeMid, $timeLow),
             Random::bytes(2), // clock_seq
-            self::nodeId($mac), // node
+            (new Mac($mac))->getBinary(), // node; random with the multicast bit set when omitted
         ]);
         $instance->fix(6);
         return $instance;
@@ -294,25 +295,6 @@ final class Uuid implements Stringable
         $baseTimestamp = -12219292800 * 1000 * 1000 * 10;
         $currentTimestamp = Timestamp::currentV1Timestamp();
         return $currentTimestamp - $baseTimestamp;
-    }
-
-    /**
-     * Returns the 48-bit node field for UUIDv1 / UUIDv6.
-     *
-     * An explicitly given MAC address is used as-is. Without one, a random
-     * node ID is generated with the multicast bit (LSB of the first octet)
-     * set, as RFC 9562 §6.10 requires, so it can never collide with an IEEE
-     * 802 address assigned to a real network card.
-     */
-    private static function nodeId(Mac|string|null $mac): string
-    {
-        if ($mac !== null && $mac !== '') {
-            return (new Mac($mac))->getBinary();
-        }
-
-        $node = Random::bytes(6);
-        $node[0] = chr(ord($node[0]) | 0x01);
-        return $node;
     }
 
     private static function nilBinary(): string

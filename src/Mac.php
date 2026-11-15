@@ -142,10 +142,17 @@ final class Mac implements Stringable
         throw new Exception('Given string is not a Mac address.');
     }
 
+    /**
+     * Generates a random locally administered multicast address.
+     *
+     * The multicast bit (0x01) is set as RFC 9562 §6.10 requires for a random UUID
+     * node ID: no IEEE 802 address assigned to a network card has it set, so the
+     * result can never collide with real hardware. The local bit (0x02) is set too.
+     */
     private static function random(): string
     {
         $binary = Random::bytes(6);
-        $binary[0] = chr((ord($binary[0]) & 0xfc) | 0x02); // drop multicast flag & set non global
+        $binary[0] = chr(ord($binary[0]) | 0x03); // set multicast & locally administered bits
         return $binary;
     }
 }

@@ -118,7 +118,7 @@ final class UuidTest extends TestCase
     }
 
     /**
-     * @return array<string, array{'v1'|'v6', ''|null}>
+     * @return array<string, array{'v1'|'v6', Mac|''|null}>
      */
     public static function timeBasedGenerators(): array
     {
@@ -127,6 +127,8 @@ final class UuidTest extends TestCase
             'v1, empty' => ['v1', ''],
             'v6, null' => ['v6', null],
             'v6, empty' => ['v6', ''],
+            'v1, random Mac' => ['v1', new Mac()],
+            'v6, random Mac' => ['v6', new Mac()],
         ];
     }
 
