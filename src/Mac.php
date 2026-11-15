@@ -111,13 +111,16 @@ final class Mac implements Stringable
 
     private static function parse(string $value): string
     {
+        // Check for raw 6-octet binary before trimming: octets such as 0x00, 0x20 or 0x0a
+        // are valid at either end of a MAC address and must not be stripped.
+        // No textual format is 6 characters long, so this cannot misclassify text input.
+        if (strlen($value) === 6) {
+            return $value;
+        }
+
         $value = trim($value);
         if ($value === '') {
             throw new Exception('Given string is not a valid Mac address.');
-        }
-
-        if (strlen($value) === 6) {
-            return $value;
         }
 
         if (
