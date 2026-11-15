@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
+use Override;
 use Stringable;
 use jp3cki\uuid\internal\Random;
 
@@ -34,11 +35,12 @@ final class Mac implements Stringable
         $this->binary = match (true) {
             $address instanceof self => $address->binary,
             $address === null, $address === '' => self::random(),
-            is_string($address) => self::fromString($address)->binary,
+            is_string($address) => self::parse($address),
             // default => throw new Exception('Could not create instance of Mac class.'),
         };
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->formatEUI();
@@ -61,7 +63,7 @@ final class Mac implements Stringable
 
     private function formatImpl(string $sep): string
     {
-        $hex = (string)bin2hex((string)$this->binary);
+        $hex = bin2hex($this->binary);
         return implode($sep, [
             substr($hex, 0, 2),
             substr($hex, 2, 2),
@@ -99,15 +101,26 @@ final class Mac implements Stringable
 
     public static function fromString(string $value): self
     {
-        $instance = new self();
-        $value = trim($value);
+        // The constructor treats '' as "generate a random address", so reject it here.
         if ($value === '') {
             throw new Exception('Given string is not a valid Mac address.');
         }
 
+        return new self($value);
+    }
+
+    private static function parse(string $value): string
+    {
+        // Check for raw 6-octet binary before trimming: octets such as 0x00, 0x20 or 0x0a
+        // are valid at either end of a MAC address and must not be stripped.
+        // No textual format is 6 characters long, so this cannot misclassify text input.
         if (strlen($value) === 6) {
-            $instance->binary = $value;
-            return $instance;
+            return $value;
+        }
+
+        $value = trim($value);
+        if ($value === '') {
+            throw new Exception('Given string is not a valid Mac address.');
         }
 
         if (
@@ -122,18 +135,24 @@ final class Mac implements Stringable
             $value = (string)preg_replace('/[^0-9a-fA-F]+/', '', $value); // remove non-hexadecimal chars
             $tmp = hex2bin($value);
             if ($tmp !== false) {
-                $instance->binary = $tmp;
-                return $instance;
+                return $tmp;
             }
         }
 
         throw new Exception('Given string is not a Mac address.');
     }
 
+    /**
+     * Generates a random locally administered multicast address.
+     *
+     * The multicast bit (0x01) is set as RFC 9562 §6.10 requires for a random UUID
+     * node ID: no IEEE 802 address assigned to a network card has it set, so the
+     * result can never collide with real hardware. The local bit (0x02) is set too.
+     */
     private static function random(): string
     {
         $binary = Random::bytes(6);
-        $binary[0] = chr((ord($binary[0]) & 0xfc) | 0x02); // drop multicast flag & set non global
+        $binary[0] = chr(ord($binary[0]) | 0x03); // set multicast & locally administered bits
         return $binary;
     }
 }

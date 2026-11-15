@@ -14,8 +14,6 @@ use function explode;
 use function floor;
 use function function_exists;
 use function microtime;
-use function ord;
-use function random_int;
 use function time;
 
 final class Timestamp
@@ -42,15 +40,7 @@ final class Timestamp
         $ts = time() * 1000 * 1000 * 10; // 100ns tick
 
         // fill sub-sec fields by random value
-        while (true) {
-            $rBin = Random::bytes(3);
-            $r = (ord($rBin[0]) << 16) | (ord($rBin[1]) << 8) | ord($rBin[2]);
-            if ($r < 1000 * 1000 * 10) {
-                break;
-            }
-        }
-
-        return $ts + $r;
+        return $ts + Random::int(0, 1000 * 1000 * 10 - 1);
     }
 
     public static function currentUlidTime(): int
@@ -69,6 +59,7 @@ final class Timestamp
 
     public static function ulidTime(): int
     {
-        return time() * 1000 + random_int(0, 999);
+        // fill sub-sec fields by random value
+        return time() * 1000 + Random::int(0, 999);
     }
 }

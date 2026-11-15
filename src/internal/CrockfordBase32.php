@@ -24,7 +24,7 @@ use function substr;
 
 final class CrockfordBase32
 {
-    private const CHARACTERS_FOR_ENCODING = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+    private const string CHARACTERS_FOR_ENCODING = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 
     /**
      * @param non-negative-int $value
