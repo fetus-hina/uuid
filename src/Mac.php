@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
+use Override;
 use Stringable;
 use jp3cki\uuid\internal\Random;
 
@@ -39,6 +40,7 @@ final class Mac implements Stringable
         };
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->formatEUI();

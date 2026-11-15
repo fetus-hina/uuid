@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
+use Override;
 use ParagonIE\ConstantTime\Base32;
 use Stringable;
 use jp3cki\uuid\internal\CrockfordBase32;
@@ -33,6 +34,7 @@ final class Ulid implements Stringable
         $this->random = Random::bytes(10); // 80 bits
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->formatAsString();

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid;
 
+use Override;
 use Stringable;
 use jp3cki\uuid\internal\Random;
 use jp3cki\uuid\internal\Timestamp;
@@ -206,6 +207,7 @@ final class Uuid implements Stringable
         };
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->formatAsString();
