@@ -80,6 +80,26 @@ final class MacTest extends TestCase
         $this->assertEquals('08:00:2b:01:02:03', $instance->formatEUI());
     }
 
+    public function testConstructFromEmptyStringIsRandom(): void
+    {
+        $instance = new Mac('');
+        $this->assertEquals(6, strlen($instance->getBinary()));
+        $this->assertTrue($instance->isUnicast());
+        $this->assertTrue($instance->isLocal());
+    }
+
+    public function testConstructFromBlankStringThrows(): void
+    {
+        $this->expectException(Exception::class);
+        new Mac(' ');
+    }
+
+    public function testConstructFromInvalidStringThrows(): void
+    {
+        $this->expectException(Exception::class);
+        new Mac('08:00-2b:01-02:03');
+    }
+
     public function testStringify(): void
     {
         $instance = new Mac('08:00:2b:01:02:03');

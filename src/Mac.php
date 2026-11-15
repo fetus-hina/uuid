@@ -35,7 +35,7 @@ final class Mac implements Stringable
         $this->binary = match (true) {
             $address instanceof self => $address->binary,
             $address === null, $address === '' => self::random(),
-            is_string($address) => self::fromString($address)->binary,
+            is_string($address) => self::parse($address),
             // default => throw new Exception('Could not create instance of Mac class.'),
         };
     }
@@ -101,15 +101,23 @@ final class Mac implements Stringable
 
     public static function fromString(string $value): self
     {
-        $instance = new self();
+        // The constructor treats '' as "generate a random address", so reject it here.
+        if ($value === '') {
+            throw new Exception('Given string is not a valid Mac address.');
+        }
+
+        return new self($value);
+    }
+
+    private static function parse(string $value): string
+    {
         $value = trim($value);
         if ($value === '') {
             throw new Exception('Given string is not a valid Mac address.');
         }
 
         if (strlen($value) === 6) {
-            $instance->binary = $value;
-            return $instance;
+            return $value;
         }
 
         if (
@@ -124,8 +132,7 @@ final class Mac implements Stringable
             $value = (string)preg_replace('/[^0-9a-fA-F]+/', '', $value); // remove non-hexadecimal chars
             $tmp = hex2bin($value);
             if ($tmp !== false) {
-                $instance->binary = $tmp;
-                return $instance;
+                return $tmp;
             }
         }
 
