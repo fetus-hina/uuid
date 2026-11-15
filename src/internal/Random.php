@@ -19,6 +19,11 @@ use jp3cki\uuid\Exception;
 final class Random
 {
     /**
+     * Returns $length random octets.
+     *
+     * Only a failure of the random source is converted to Exception; an invalid
+     * length ($length < 1) is a programming error and propagates as ValueError.
+     *
      * @param int<1, max> $length
      */
     public static function bytes(int $length): string
@@ -26,6 +31,8 @@ final class Random
         $generator = new Randomizer(new SecureRandomEngine());
         try {
             return $generator->getBytes($length);
+        } catch (ValueError $e) {
+            throw $e;
         } catch (Throwable $e) {
             throw new Exception('No random source', 0, $e);
         }

@@ -50,6 +50,12 @@ final class RandomTest extends TestCase
         }
     }
 
+    public function testBytesRejectsInvalidLength(): void
+    {
+        $this->expectException(ValueError::class);
+        Random::bytes(0); // @phpstan-ignore argument.type (deliberately out of the declared range)
+    }
+
     public function testIntRejectsInvalidRange(): void
     {
         $this->expectException(ValueError::class);
