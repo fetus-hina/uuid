@@ -18,14 +18,18 @@ use jp3cki\uuid\NS;
 use jp3cki\uuid\Uuid;
 
 use function chr;
+use function dechex;
 use function floor;
 use function gmmktime;
+use function hash;
 use function hex2bin;
+use function hexdec;
 use function intval;
 use function microtime;
 use function ord;
 use function preg_match;
 use function str_repeat;
+use function str_replace;
 use function substr;
 use function time;
 
@@ -155,11 +159,73 @@ final class UuidTest extends TestCase
 
     public function testGenerateSha256(): void
     {
+        // https://www.rfc-editor.org/rfc/rfc9562
+        // B.2.  Example of a UUIDv8 Value (Name-Based)
+        $this->assertEquals(
+            '5c146b14-3c52-8afd-938a-375d0df1fbf6',
+            Uuid::sha256(NS::dns(), 'www.example.com')->__toString(),
+        );
+    }
+
+    public function testGenerateSha256Draft(): void
+    {
         // https://www.ietf.org/archive/id/draft-ietf-uuidrev-rfc4122bis-03.txt
         // C.8.  Example of a UUIDv8 Value (name-based)
         $this->assertEquals(
             '401835fd-a627-870a-873f-ed73f2bc5b2c',
+            Uuid::sha256Draft(NS::dns(), 'www.example.com')->__toString(),
+        );
+    }
+
+    /**
+     * Cross-check both SHA-256 variants against a digest computed independently
+     * from the spec, for inputs beyond the single published test vector.
+     *
+     * @param 'sha256'|'sha256Draft' $method
+     */
+    #[DataProvider('sha256Inputs')]
+    public function testSha256MatchesSpecConstruction(string $method, string $namespace, string $name): void
+    {
+        $prefix = $method === 'sha256Draft'
+            ? (string)hex2bin(str_replace('-', '', NS::HASH_SPACE_SHA2_256))
+            : '';
+        $digest = hash('sha256', $prefix . (string)hex2bin(str_replace('-', '', $namespace)) . $name);
+
+        // Overwrite the version nibble with 8 and the variant bits with 0b10.
+        $expect = substr($digest, 0, 12)
+            . '8' . substr($digest, 13, 3)
+            . dechex((hexdec($digest[16]) & 0x3) | 0x8) . substr($digest, 17, 15);
+
+        $uuid = Uuid::$method($namespace, $name);
+        $this->assertSame(
+            substr($expect, 0, 8) . '-' . substr($expect, 8, 4) . '-' . substr($expect, 12, 4) . '-'
+                . substr($expect, 16, 4) . '-' . substr($expect, 20, 12),
+            $uuid->__toString(),
+        );
+        $this->assertSame(8, $uuid->getVersion());
+        $this->assertTrue($uuid->isValid());
+        $this->assertEquals($uuid, Uuid::$method(new Uuid($namespace), $name));
+    }
+
+    /**
+     * @return array<string, array{'sha256'|'sha256Draft', string, string}>
+     */
+    public static function sha256Inputs(): array
+    {
+        $ret = [];
+        foreach (['sha256', 'sha256Draft'] as $method) {
+            $ret["{$method}, DNS"] = [$method, NS::DNS, 'www.example.org'];
+            $ret["{$method}, URL"] = [$method, NS::URL, 'https://example.com/'];
+            $ret["{$method}, empty name"] = [$method, NS::OID, ''];
+        }
+        return $ret;
+    }
+
+    public function testSha256DiffersFromDraft(): void
+    {
+        $this->assertNotEquals(
             Uuid::sha256(NS::dns(), 'www.example.com')->__toString(),
+            Uuid::sha256Draft(NS::dns(), 'www.example.com')->__toString(),
         );
     }
 
