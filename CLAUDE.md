@@ -39,7 +39,7 @@ PSR-4 autoload: `jp3cki\uuid\` → `src/`, `jp3cki\uuid\test\` → `test/`. All 
 
 ### Internals (`src/internal/`, not part of public API)
 
-- `Random::bytes(int)` — single chokepoint for randomness; wraps PHP 8.2's `Random\Randomizer` with the `Secure` engine and re-throws failures as `jp3cki\uuid\Exception`. All UUID/ULID/MAC generators go through this.
+- `Random` — single chokepoint for randomness; wraps PHP 8.2's `Random\Randomizer` with the `Secure` engine and re-throws random-source failures as `jp3cki\uuid\Exception`. `Random::bytes(int)` returns raw octets; `Random::int($min, $max)` returns a uniform integer (an invalid range propagates as `ValueError`). All UUID/ULID/MAC generators and the `Timestamp` fallbacks go through this — don't call `random_int()` / `random_bytes()` directly.
 - `Timestamp` — provides both v1 (100ns ticks since 1582-10-15 UTC) and ULID (ms since Unix epoch) timestamps, each with a `microtime`-based primary path and a `time()`-based fallback. `Uuid::v1Timestamp` adds the `-12219292800` offset to convert Unix → UUIDv1 epoch.
 - `CrockfordBase32` — used only by `Ulid`. `encodeIntegerLower/Upper` encode a non-negative int; `fromStandardBase32` rewrites a standard Base32 string into Crockford's alphabet.
 
