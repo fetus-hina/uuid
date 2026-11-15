@@ -9,13 +9,13 @@ jobs:
       matrix:
         envconf:
           -
-            php: '8.2'
-          -
             php: '8.3'
           -
             php: '8.4'
           -
             php: '8.5'
+          -
+            php: '8.6'
     runs-on: ubuntu-24.04
     steps:
       -
@@ -31,7 +31,7 @@ jobs:
           php -v
           find . \( -type d \( -name '.git' -or -name 'vendor' \) -prune \) -or \( -type f -name '*.php' -print \) | \
             LANG=C sort | \
-            xargs ${{ matrix.envconf.php >= 8.3 && ' ' || '-n 1'}} php -l
+            xargs php -l
   phpStyleCheck:
     name: 'PHP Coding Style'
     runs-on: ubuntu-24.04
@@ -39,10 +39,10 @@ jobs:
       -
         uses: actions/checkout@v4
       -
-        name: 'Set up PHP version 8.2'
+        name: 'Set up PHP version 8.3'
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
       -
         name: 'Install PHP dependencies'
         run: 'composer install --prefer-dist'
@@ -56,10 +56,10 @@ jobs:
       -
         uses: actions/checkout@v4
       -
-        name: 'Set up PHP version 8.2'
+        name: 'Set up PHP version 8.3'
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
       -
         name: 'Install PHP dependencies'
         run: 'composer install --prefer-dist'
@@ -72,13 +72,13 @@ jobs:
       matrix:
         envconf:
           -
-            php: '8.2'
-          -
             php: '8.3'
           -
             php: '8.4'
           -
             php: '8.5'
+          -
+            php: '8.6'
     runs-on: ubuntu-24.04
     steps:
       -

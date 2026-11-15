@@ -10,7 +10,7 @@ UUIDv6, v7 and v8 are implemented based on the [draft](https://www.ietf.org/arch
 Requirements
 ------------
 
-* PHP ≥ 8.2 (64 bit)
+* PHP ≥ 8.3 (64 bit)
 * Basic extensions
     - PCRE (preg)
     - Hash
@@ -154,6 +154,9 @@ Please refer the [LICENSE](https://github.com/fetus-hina/uuid/blob/master/LICENS
 
 Breaking Changes
 ----------------
+
+- v7.0.0
+  - Changed minimum requirement to PHP 8.3.
 
 - v6.0.0
   - `Uuid::isValid()` now also validates the variant bits. UUIDs with the NCS
