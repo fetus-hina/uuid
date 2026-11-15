@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace jp3cki\uuid\test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use jp3cki\uuid\Exception;
+use jp3cki\uuid\Mac;
 use jp3cki\uuid\NS;
 use jp3cki\uuid\Uuid;
 
@@ -21,8 +23,10 @@ use function gmmktime;
 use function hex2bin;
 use function intval;
 use function microtime;
+use function ord;
 use function preg_match;
 use function str_repeat;
+use function substr;
 use function time;
 
 final class UuidTest extends TestCase
@@ -82,6 +86,55 @@ final class UuidTest extends TestCase
         $uuidTS += gmmktime(0, 0, 0, 10, 15, 1582) * 1000 * 1000 * 10;
         $uuidTS = (int)floor($uuidTS / (1000 * 1000 * 10));
         $this->assertEqualsWithDelta($now, $uuidTS, 1);
+    }
+
+    /**
+     * RFC 9562 §6.10: a random node ID MUST have the multicast bit set.
+     *
+     * @param 'v1'|'v6' $method
+     */
+    #[DataProvider('timeBasedGenerators')]
+    public function testRandomNodeHasMulticastBit(string $method, Mac|string|null $mac): void
+    {
+        for ($i = 0; $i < 32; ++$i) {
+            $node = (string)hex2bin(substr(Uuid::$method($mac)->__toString(), -12));
+            $this->assertSame(0x01, ord($node[0]) & 0x01);
+        }
+    }
+
+    /**
+     * @param 'v1'|'v6' $method
+     */
+    #[DataProvider('timeBasedMethods')]
+    public function testExplicitMacIsUsedAsIs(string $method): void
+    {
+        // A universally administered unicast address must not be altered.
+        $this->assertStringEndsWith('-08002b010203', Uuid::$method(new Mac('08:00:2b:01:02:03'))->__toString());
+        $this->assertStringEndsWith('-08002b010203', Uuid::$method('08:00:2b:01:02:03')->__toString());
+    }
+
+    /**
+     * @return array<string, array{'v1'|'v6', ''|null}>
+     */
+    public static function timeBasedGenerators(): array
+    {
+        return [
+            'v1, null' => ['v1', null],
+            'v1, empty' => ['v1', ''],
+            'v6, null' => ['v6', null],
+            'v6, empty' => ['v6', ''],
+        ];
+    }
+
+    /**
+     * @return array<string, array{'v1'|'v6'}>
+     */
+    public static function timeBasedMethods(): array
+    {
+        return [
+            'v1' => ['v1'],
+            'v6' => ['v6'],
+        ];
     }
 
     public function testGenerateV3(): void
