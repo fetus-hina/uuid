@@ -33,7 +33,7 @@ use function substr;
 
 final class Uuid implements Stringable
 {
-    private const BINARY_OCTETS = 16;
+    private const int BINARY_OCTETS = 16;
 
     private string $binary = '';
 
